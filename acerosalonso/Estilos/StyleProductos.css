@@ -1,0 +1,208 @@
+/* =======================================================
+   1) PRODUCTOS – SECCIÓN BASE
+======================================================= */
+
+#productos {
+    background: #e2e8f0;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+/* =======================================================
+   2) SLIDER – CONTENEDOR
+======================================================= */
+
+.EnvolturaSlider {
+    position: relative;
+    width: 90%;
+    /* max-width: 1450px; */
+    justify-content: center;
+    margin: 10px auto;
+    padding: 60px; /* desktop */
+    overflow: hidden;
+}
+
+.ContenidoSlider {
+    /* overflow: hidden; */
+    overflow: visible; /* permite que salga */
+    border: 2px solid #ccc;
+}
+
+.slider {
+    display: flex;
+    transition: transform 0.3s ease-in-out;
+    align-items: flex-start; /* mantener alineados arriba */
+}
+
+/* Cada item dentro del slider */
+.slider-item {
+    min-width: calc(100% / 3); /* 3 items visibles en desktop */
+    text-align: center;
+    /* padding: 40px 0; */
+    padding: 4px;
+    background-color: #f2f2f2;
+    border-right: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+/* para separar los items */
+.slider-item:last-child {
+    border-right: none;
+}
+
+/* =======================================================
+   3) BOTONES DEL SLIDER
+======================================================= */
+
+.btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 100px 25px;  /* diseño original grande en desktop */
+    cursor: pointer;
+    font-size: 18px;
+    z-index: 2;
+}
+
+.btnAnterior {
+    left: 0; /* un poco afuera del contenedor */
+}
+
+.btn-right {
+    right: 0;
+}
+
+
+/* =======================================================
+   4) TARJETAS (CARD) DENTRO DEL SLIDER
+======================================================= */
+
+.card {
+    height: 250px; /* Altura inicial */
+    /* width: 310px; Ancho inicial */
+    position: relative;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    /* transform: translateY(-5px); */
+    transform: scale(1.05);
+    z-index: 10;
+    overflow: visible;
+    /* top: -50%; desplazar hacia arriba al hacer hover */
+    height: 400px; /* altura al hacer hover en desktop */
+}
+
+.card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+/* Contenido principal (siempre visible) */
+.card-content {
+    /* padding: 15px; */
+    color: #2d3748;
+}
+
+.card a {
+    text-decoration: none;
+    color: inherit;
+    inset: 0;
+    z-index: 2;
+}
+
+/* =======================================================
+   5) OVERLAY (INFO EXTRA)
+======================================================= */
+
+/* Información extra (oculta al inicio) */
+.overlay {
+    position: absolute;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    padding: 0 15px;
+}
+
+/* Cuando pasas el mouse, aparece la información */
+.card:hover .overlay {
+    opacity: 1;
+    max-height: 250px;
+    padding: 15px;
+}
+
+
+/* =======================================================
+   6) RESPONSIVE
+======================================================= */
+
+/* ===== Tablets grandes / laptops pequeñas ===== */
+@media (max-width: 1024px) {
+
+    /* Un poco más de espacio para cada tarjeta (2 por vista aprox.) */
+    .slider-item {
+        min-width: 50%;
+    }
+
+    .EnvolturaSlider {
+        padding: 40px; /* menos padding que en desktop */
+    }
+
+    .btn {
+        padding: 80px 22px;
+    }
+}
+
+/* ===== Tablets pequeñas / móviles en horizontal ===== */
+@media (max-width: 768px) {
+
+    .EnvolturaSlider {
+        width: 100%;
+        padding: 30px 16px;
+    }
+
+    /* Mostrar 1 tarjeta por vista */
+    .slider-item {
+        min-width: 100%;
+    }
+
+    .btn {
+        padding: 60px 18px;
+        font-size: 16px;
+    }
+
+    /* Cards más flexibles en alto: que no se queden fijas en 400px */
+    .card {
+        height: auto;
+    }
+
+    .card:hover {
+        height: auto; /* deja que crezca según el contenido */
+    }
+}
+
+/* ===== Teléfonos pequeños ===== */
+@media (max-width: 480px) {
+
+    .EnvolturaSlider {
+        padding: 20px 10px;
+    }
+
+    .btn {
+        padding: 40px 14px;
+        font-size: 15px;
+    }
+
+    .card img {
+        height: 140px;
+    }
+}

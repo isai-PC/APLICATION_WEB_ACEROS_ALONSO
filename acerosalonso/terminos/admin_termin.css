@@ -1,0 +1,113 @@
+:root{
+            --fondo:#eef2f7;
+            --primario:#0b7285;
+            --borde:#d0d7e2;
+            --ok:#166534;
+            --error:#b91c1c;
+        }
+        *{
+            box-sizing:border-box;
+            margin:0;
+            padding:0;
+            font-family:system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                         Roboto, Helvetica, Arial, sans-serif;
+        }
+        body{
+            background:var(--fondo);
+            padding:30px 10px;
+            display:flex;
+            justify-content:center;
+        }
+        .contenedor{
+            width:100%;
+            max-width:1000px;
+        }
+        .card{
+            background:#fff;
+            border-radius:18px;
+            box-shadow:0 18px 35px rgba(15,23,42,0.16);
+            padding:24px 24px 20px;
+            margin-bottom:18px;
+        }
+        h1{
+            font-size:1.6rem;
+            margin-bottom:6px;
+        }
+        .subtitulo{
+            font-size:.9rem;
+            color:#6b7280;
+            margin-bottom:12px;
+        }
+        .mensaje{
+            margin-bottom:12px;
+            padding:10px;
+            border-radius:10px;
+            font-size:.9rem;
+        }
+        .ok{ background:#dcfce7; color:var(--ok); }
+        .error{ background:#fee2e2; color:var(--error); }
+        table{
+            width:100%;
+            border-collapse:collapse;
+            font-size:.9rem;
+        }
+        th,td{
+            border-bottom:1px solid #e5e7eb;
+            padding:8px;
+            text-align:left;
+        }
+        th{
+            background:#f3f4f6;
+        }
+        .acciones{
+            display:flex;
+            gap:6px;
+        }
+        .btn-tabla{
+            border:none;
+            border-radius:999px;
+            padding:4px 10px;
+            font-size:.8rem;
+            cursor:pointer;
+            text-decoration:none;
+            display:inline-block;
+        }
+        .btn-editar{ background:#0b7285; color:#fff; }
+        .btn-eliminar{ background:#b91c1c; color:#fff; }
+
+        label{
+            font-weight:600;
+            margin:10px 0 4px;
+            display:block;
+        }
+        input,textarea{
+            width:100%;
+            padding:8px 10px;
+            border-radius:10px;
+            border:1px solid var(--borde);
+            background:#f9fafb;
+            font-size:.95rem;
+        }
+        textarea{
+            min-height:120px;
+            resize:vertical;
+        }
+        .acciones-form{
+            margin-top:14px;
+            display:flex;
+            justify-content:flex-start;
+            gap:10px;
+        }
+        .btn{
+            border:none;
+            border-radius:12px;
+            padding:9px 18px;
+            font-size:.9rem;
+            cursor:pointer;
+            display:inline-flex;
+            align-items:center;
+            gap:6px;
+            text-decoration:none;
+        }
+        .btn-guardar{ background:var(--primario); color:#fff; }
+        .btn-cancelar{ background:#6b7280; color:#fff; }

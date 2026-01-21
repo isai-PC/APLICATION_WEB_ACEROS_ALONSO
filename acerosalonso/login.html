@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Inicio de sesión</title>
+</head>
+<body>
+<h2>Acceso para empleados</h2>
+
+<form id="loginForm">
+  <input type="text" id="usuario" placeholder="Usuario" required><br><br>
+  <input type="password" id="password" placeholder="Contraseña" required><br><br>
+  <button type="submit">Iniciar sesión</button>
+</form>
+
+<p id="mensaje"></p>
+
+<script>
+document.getElementById("loginForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+  const usuario = document.getElementById("usuario").value;
+  const password = document.getElementById("password").value;
+
+  const res = await fetch("login.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: `usuario=${encodeURIComponent(usuario)}&password=${encodeURIComponent(password)}`
+  });
+
+  const texto = await res.text();
+  if (texto === "OK") {
+    window.location.href = "empleado.php";  // redirige a la página privada
+  } else {
+    document.getElementById("mensaje").innerText = texto;
+  }
+});
+</script>
+
+</body>
+</html>

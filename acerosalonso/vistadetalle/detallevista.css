@@ -1,0 +1,163 @@
+/* --- Guardar en: vistadetalle/detallevista.css --- */
+/* (o como se llame tu CSS para esta página) */
+
+/* --- body {
+/* ---     background-color: #e2e8f0; /* Fondo gris claro */
+/* --- } --- */
+
+.detalle-main {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* "Migas de pan" (Ej: Productos / Varilla) */
+.breadcrumb {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 15px;
+}
+.breadcrumb a {
+    color: #007bff;
+    text-decoration: none;
+}
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+/* El contenedor blanco */
+.detalle-container {
+    display: flex;
+    flex-wrap: wrap; /* Para pantallas pequeñas */
+    gap: 30px 40px; /* 30px vertical, 40px horizontal */
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    padding: 40px;
+    overflow: hidden;
+}
+
+/* Columna de la imagen */
+.detalle-imagen {
+    flex: 1;
+    min-width: 300px; /* Ancho mínimo */
+}
+.detalle-imagen img {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+/* Columna de la información */
+.detalle-info {
+    flex: 1.5; /* Que sea más ancha que la imagen */
+    min-width: 300px;
+}
+.detalle-info h1 {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+.detalle-info p.descripcion-corta {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 25px;
+}
+.detalle-info h2 {
+    font-size: 1.4rem;
+    color: #333;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    margin-top: 25px;
+}
+
+/* Tabla de Especificaciones */
+.specs-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.specs-table td {
+    padding: 12px 5px;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 1rem;
+    color: #333;
+}
+.specs-table tr:last-child td {
+    border-bottom: none;
+}
+.specs-table td:first-child {
+    color: #555;
+    width: 40%; /* Ancho para la etiqueta */
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 30px;
+    color: white;
+    margin-top: 40px;
+}
+
+
+/* --- AÑADIDO: Estilos para Productos Relacionados --- */
+
+.relacionados-container {
+    margin-top: 50px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    padding: 30px 40px;
+}
+
+.relacionados-container h2 {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    margin-top: 0;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+
+.grid-relacionados {
+    display: grid;
+    /* Crea columnas automáticas de al menos 180px */
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+}
+
+.card-relacionado {
+    text-decoration: none;
+    color: #333;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex; /* Para alinear bien el h3 */
+    flex-direction: column; /* Para alinear bien el h3 */
+}
+
+.card-relacionado:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.card-relacionado img {
+    width: 100%;
+    height: 150px; /* Alto fijo para la imagen */
+    object-fit: cover;
+    border-bottom: 1px solid #eee;
+}
+
+.card-relacionado h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 15px;
+    margin: 0;
+    text-align: center;
+    background-color: #fcfcfc;
+    flex-grow: 1; /* Hace que el h3 ocupe el espacio restante */
+}

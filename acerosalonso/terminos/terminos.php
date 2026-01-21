@@ -1,0 +1,186 @@
+<?php 
+require_once '../conexion.php';
+
+// Obtener TODOS los términos ordenados por id
+$sql = "SELECT * FROM terminos_condiciones ORDER BY id ASC";
+$res = $conn->query($sql);
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Términos y Condiciones</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Hoja de estilos pública -->
+<link rel="stylesheet" href="../StylesGeneralesPublic.css?v=<?php echo time(); ?>">
+
+</head>
+<body>
+    <header>
+        <section class="logo">
+            <img src="../ACASALogoAcerosA.png" alt="Logo de Aceros Alonso">
+            <h2>Aceros Alonso</h2>
+        </section>
+
+
+        <nav>
+            <ul>
+                <li class="menu">
+                    <a href="#productos" aria-haspopup="true" aria-expanded="false">Categorías</a>
+                    <ul class="ContenidoMenu" role="menu" aria-label="Categorías">
+                        <?php
+                        // Consulta para obtener las categorías
+                        $sqlMenu = "SELECT id_categoria, nombre_categoria FROM categoria ORDER BY nombre_categoria ASC";
+                        $resMenu = $conn->query($sqlMenu);
+
+                        if ($resMenu && $resMenu->num_rows > 0) {
+                            // Si hay categorías, crea un enlace para cada una
+                            while ($cat = $resMenu->fetch_assoc()) {
+                                $id = (int)$cat['id_categoria'];
+                                $nombre = htmlspecialchars($cat['nombre_categoria']);
+
+                                echo '<li role="none"><a role="menuitem" href="../Catalogo/CatalogoCategorias.php?id_categoria=' . $id . '">' . $nombre . '</a></li>';
+                            }
+                        } else {
+                            echo '<li role="none"><a role="menuitem" href="#">Sin categorías</a></li>';
+                        }
+                        ?>
+                    </ul>
+                </li>
+                <li class="menu">
+                    <a href="#">Acerca de nosotros</a>
+                    <ul class="ContenidoMenu">
+                        <li><a href="../MisionVision/misionyvision.php">Nosotros</a></li>
+                    </ul>
+                </li>
+
+                <li><a href="../paginaPrincipal.php">Inicio</a></li>
+                
+            </ul>
+        </nav>
+    </header>
+    <!--===========================COPIAR ESTO Y PEGAR EN LAS DEMAS PAGINAS================================== -->
+    <script src="../Accesibilidad/accesi.js?v=<?php echo time(); ?>"></script>
+    <!-- Botón de accesibilidad -->
+    <div id="btnAccesibilidad" onclick="event.stopPropagation(); toggleMenuAccesibilidad()">
+        <img src="../Accesibilidad/accesibilidad.png" style="width: 100%; height:100%; object-fit:cover;">
+    </div>
+    <!-- Iframe del menú -->
+    <iframe
+        id="menuAccesibilidad"
+        src="../Accesibilidad/MenuAccesibilidad.html"
+        class="accesibilidad-frame">
+    </iframe>
+
+<main>
+
+    <div class="contenedor-reporte">
+        <h1>Términos y Condiciones</h1>
+
+        <?php if ($res && $res->num_rows > 0): ?>
+            <?php $i = 1; ?>
+            
+            <?php while($row = $res->fetch_assoc()): ?>
+                <fieldset style="margin-bottom: 20px;">
+                    <legend>
+                        <?= $i . ". " . htmlspecialchars($row['titulo']); ?>
+                    </legend>
+
+                    <p style="white-space: pre-line;">
+                        <?php
+                            // Limpiar saltos de línea múltiples
+                            $texto = preg_replace('/\n{2,}/', "\n", $row['contenido']);
+                            echo htmlspecialchars($texto);
+                        ?>
+                    </p>
+                </fieldset>
+
+                <?php $i++; ?>
+            <?php endwhile; ?>
+
+        <?php else: ?>
+            <p>No hay términos registrados.</p>
+        <?php endif; ?>
+
+        <!-- BOTONES -->
+        <div style="display:flex; gap:10px; margin-top:25px; justify-content:flex-start; flex-wrap:wrap;">
+            
+            <a href="../paginaPrincipal.php"
+               class="btn-generar"
+               style="text-decoration:none; text-align:center;">
+               Regresar
+            </a>
+        </div>
+
+    </div>
+
+</main>
+<footer>
+        <div class="footer-sections" id="contacto">
+            <div class="barra">
+                <?php
+                $sql = "SELECT pregunta, respuesta FROM preguntas_frecuentes LIMIT 1";
+                $answer = $conn->query($sql);
+                if ($answer && $answer->num_rows > 0):
+                    while ($row = $answer->fetch_assoc()):
+                        $pregunta = $row['pregunta'] ?? '';
+                        $respuesta = $row['respuesta'] ?? '';
+                ?>
+                        <h3><strong><?php echo htmlspecialchars($pregunta) ?></strong></h3>
+                        <p><?php echo htmlspecialchars($respuesta) ?></p>
+                <?php
+                    endwhile;
+                    // Liberar resultados cuando ya no se necesiten
+                    if (method_exists($answer, 'free')): $answer->free();
+                    endif;
+                else:
+                    echo '<p style="padding:1rem;">Aún no hay preguntas frecuentes para mostrar.</p>';
+                endif;
+                ?>
+            </div>
+            <div class="barra">
+
+                <?php
+                // Obtener URLs de redes sociales 
+                $sql = "SELECT red_social_1, red_social_2, red_social_3 FROM contacto_info LIMIT 1";
+                $result = $conn->query($sql);
+                $red1 = $red2 = $red3 = '#';
+
+                if ($result && $result->num_rows > 0) {
+                    $row = $result->fetch_assoc();
+                    $red1 = $row['red_social_1'] ?? '#';
+                    $red2 = $row['red_social_2'] ?? '#';
+                    $red3 = $row['red_social_3'] ?? '#';
+                    if (method_exists($result, 'free')) { // Liberar resultados cuando ya no se necesiten
+                        $result->free();
+                    }
+                }
+                ?>
+
+                <h3>Nuestras Redes Sociales</h3>
+                <div class="redes">
+                    <a href="<?php echo htmlspecialchars($red1); ?>" target="_blank" rel="noopener noreferrer"><img
+                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/500px-Facebook_Logo_%282019%29.png"
+                            alt="Facebook"></a>
+                    <a href="<?php echo htmlspecialchars($red2); ?>" target="_blank" rel="noopener noreferrer"><img
+                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/1200px-Instagram_icon.png"
+                            alt="Instagram"></a>
+                    <a href="<?php echo htmlspecialchars($red3); ?>" target="_blank" rel="noopener noreferrer"><img
+                            src="https://upload.wikimedia.org/wikipedia/commons/0/01/X-Logo-Round-Color.png"
+                            alt="X"></a>
+                </div>
+            </div>
+            <div class="barra">
+                <ul class="barra-links">
+                    <li><a href="../contacto/contacto.php">Contacto</a></li>
+                    <li><a href="../Preguntasfrecuentes/preguntas.php">Preguntas frecuentes</a></li>                    
+                </ul>
+            </div>
+
+        </div>
+        <p class="copy">Todos los derechos reservados © 2025 Aceros Alonso</p>
+    </footer>
+
+</body>
+</html>

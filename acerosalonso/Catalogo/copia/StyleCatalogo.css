@@ -1,0 +1,83 @@
+/* --- Guardar en: Catalogo/StyleCatalogo.css --- */
+
+/* --- Estilos Generales --- */
+body {
+    background-color: #f4f7f6;
+}
+main#catalogo {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+main#catalogo h1 {
+    font-size: 2.5rem;
+    color: #333;
+    text-align: center;
+    margin-bottom: 10px;
+}
+main#catalogo p.subtitulo {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+/* --- Contenedor Blanco de Productos --- */
+.lista-productos-container {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    padding: 20px 40px;
+    overflow: hidden;
+}
+
+/* --- Cada Producto de la Lista --- */
+.producto-item {
+    display: flex;
+    flex-wrap: wrap; 
+    align-items: flex-start;
+    padding: 30px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+.producto-item:last-child { border-bottom: none; padding-bottom: 15px; }
+.producto-item:first-child { padding-top: 15px; }
+
+/* --- Imagen del Producto (Izquierda) --- */
+.producto-imagen {
+    flex: 0 0 180px; 
+    margin-right: 30px;
+}
+.producto-imagen img {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+/* --- Info del Producto (Derecha) --- */
+.producto-info {
+    flex: 1;
+    min-width: 250px;
+}
+.producto-info h3 {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin: 0;
+    margin-bottom: 15px;
+}
+/* Párrafo de descripción */
+.producto-info p.descripcion-producto {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #444;
+    margin: 0;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 30px;
+    background: #2c3e50;
+    color: white;
+    margin-top: 40px;
+}

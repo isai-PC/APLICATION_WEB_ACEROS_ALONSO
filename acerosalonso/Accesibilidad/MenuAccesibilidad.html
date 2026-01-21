@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+/* ====== Estilos del widget flotante ====== */
+#accesibilidad-widget {
+    box-sizing: border-box;
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+    background: #1a202c;
+    color: white;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    z-index: 1;
+    font-family: "Segoe UI", Arial;
+}
+
+#accesibilidad-widget h4 {
+    margin: 0 0 10px;
+    font-size: 16px;
+    text-align: center;
+}
+
+#accesibilidad-widget a {
+    display: block;
+    color: white;
+    padding: 5%;
+    margin-bottom: 6px;
+    text-decoration: none;
+    border-radius: 4px;
+    background: #2d3748;
+    font-size: 100%;
+    text-align: center;
+    transition: background .2s, color .2s, box-shadow .2s;
+    cursor: pointer;
+}
+
+/* Hover mantiene contraste agradable */
+#accesibilidad-widget a:hover {
+    background: #ff8c42;
+    color: #111;
+}
+
+/* ESTADO ACTIVO PARA LOS TOGGLES */
+#accesibilidad-widget a.activo {
+    background: #ff8c42;
+    color: #111;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255,140,66,0.15) inset;
+}
+
+/* Mejora accesibilidad: los toggles deben anunciar estado */
+#accesibilidad-widget a[role="button"] { outline: none; }
+</style>
+</head>
+
+<body>
+<div id="accesibilidad-widget">
+    <h4>Accesibilidad</h4>
+
+   
+    <a href="#" data-accion="aumentar">Aumentar Letra</a>
+    <a href="#" data-accion="disminuir">Disminuir Letra</a>
+    <a href="#" data-accion="restaurar">Restablecer Tamaño</a>
+
+    <a href="#" data-accion="suave" role="button" aria-pressed="false" tabindex="0">Colores suaves</a>
+    <a href="#" data-accion="daltonico" role="button" aria-pressed="false" tabindex="0">Modo daltónicos</a>
+    <a href="#" data-accion="contraste" role="button" aria-pressed="false" tabindex="0">Modo Contraste</a>
+    <a href="#" data-accion="lector" role="button" aria-pressed="false" tabindex="0">Leer Página</a>
+</div>
+
+<script>
+// Este script corre DENTRO del iframe
+
+document.addEventListener("DOMContentLoaded", () => {
+    const links = document.querySelectorAll("#accesibilidad-widget a");
+
+    // Sincronizar estado visual según lo que haya en el padre
+    function syncEstadoDesdePadre() {
+        // Limpiar estado visual y atributos ARIA
+        links.forEach(a => { a.classList.remove('activo'); if (a.getAttribute('role') === 'button') a.setAttribute('aria-pressed', 'false'); });
+
+        try {
+            if (parent.modoSuave) {
+                const l = document.querySelector('[data-accion="suave"]');
+                if (l) { l.classList.add('activo'); l.setAttribute('aria-pressed', 'true'); }
+            }
+            if (parent.modoDaltonico) {
+                const l = document.querySelector('[data-accion="daltonico"]');
+                if (l) { l.classList.add('activo'); l.setAttribute('aria-pressed', 'true'); }
+            }
+            if (parent.contrasteActivo) {
+                const l = document.querySelector('[data-accion="contraste"]');
+                if (l) { l.classList.add('activo'); l.setAttribute('aria-pressed', 'true'); }
+            }
+            if (parent.lecturaActiva) {
+                const l = document.querySelector('[data-accion="lector"]');
+                if (l) { l.classList.add('activo'); l.setAttribute('aria-pressed', 'true'); }
+            }
+        } catch (e) {
+            console.warn('No se pudo leer estado del padre:', e);
+        }
+    }
+
+    links.forEach(link => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();          // <-- evita recargar / navegar
+            e.stopPropagation();
+
+            const accion = link.dataset.accion;
+
+            // Llamamos a las funciones del padre (accesi.js)
+            switch (accion) {
+                case "aumentar":
+                    parent.aumentarLetra();
+                    break;
+                case "disminuir":
+                    parent.disminuirLetra();
+                    break;
+                case "restaurar":
+                    parent.restaurarLetra();
+                    break;
+                case "suave":
+                    parent.toggleModoSuave();
+                    break;
+                case "daltonico":
+                    parent.toggleModoDaltonico();
+                    break;
+                case "contraste":
+                    parent.toggleContraste();
+                    break;
+                case "lector":
+                    parent.leerPagina();
+                    break;
+            }
+
+            // Manejo del estado visual SOLO para los toggles
+            if (["suave", "daltonico", "contraste", "lector"].includes(accion)) {
+                // Re-sincronizamos desde el padre para que quede correcto
+                syncEstadoDesdePadre();
+            } else {
+                // Para las acciones que no son toggles (ej. aumentar/disminuir),
+                // mostramos brevemente una retroalimentación visual
+                link.classList.add('activo');
+                setTimeout(() => link.classList.remove('activo'), 600);
+            }
+        });
+    });
+
+    // Al cargar el iframe, marcar los toggles que ya estaban activos
+    syncEstadoDesdePadre();
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,65 @@
+/* BOTÓN WHATSAPP (verde) */
+a.btn-wha {
+    display: inline-block;
+    min-width: 150px;
+    padding: 12px 18px;
+    background-color: #22c55e;    /* Verde WhatsApp */
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    border-bottom: 3px solid #15803d;
+    transition: all 0.2s ease;
+}
+a.btn-wha:hover {
+    background-color: #16a34a;
+    transform: translateY(-2px);
+}
+
+/* BOTÓN CORREO (azul elegante) */
+a.btn-emai {
+    display: inline-block;
+    min-width: 150px;
+    padding: 12px 18px;
+    background-color: #0b7285;   /* Azul correo */
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    border-bottom: 3px solid #064e5a;
+    transition: all 0.2s ease;
+}
+a.btn-emai:hover {
+    background-color: #095c6b;
+    transform: translateY(-2px);
+}
+
+/* BOTÓN REGRESAR (gris profesional) */
+a.btn-reg {
+    display: inline-block;
+    min-width: 150px;
+    padding: 12px 18px;
+    background-color: #6c757d;    /* Gris elegante */
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    border-bottom: 3px solid #495057;
+    transition: all 0.2s ease;
+}
+a.btn-reg:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+}
