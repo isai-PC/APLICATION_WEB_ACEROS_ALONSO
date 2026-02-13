@@ -1,4 +1,5 @@
 <?php
+
 session_start(); // Iniciamos sesión para el menú de usuario
 include '../conexion.php';
 
@@ -33,6 +34,14 @@ if ($cat_id > 0) {
 // Consulta para el Menú para que salga igual al principal
 $sqlMenu = "SELECT id_categoria, nombre_categoria FROM categoria ORDER BY nombre_categoria ASC";
 $resMenu = $conn->query($sqlMenu);
+
+$usuarioHeader = '';
+if (isset($_SESSION['id_empleado'])) {
+    $nombre = $_SESSION['nombre'] ?? 'Usuario'; // Lo que se guarda en el login
+    $usuarioHeader = "Usuario: $nombre";
+}
+
+//<a href="#">Productos en <?php echo htmlspecialchars($nombreCat);</a>
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -79,7 +88,7 @@ $resMenu = $conn->query($sqlMenu);
                 </li>
                 <?php if ($cat_id > 0): ?>
                     <li class="menu">
-                        <a href="#">Productos en <?php echo htmlspecialchars($nombreCat); ?></a>
+                        <a href="#">Productos</a>
                         <ul class="ContenidoMenu">
                             <?php
                             // Consultamos solo ID y Nombre de los productos de ESTA categoría
@@ -122,6 +131,9 @@ $resMenu = $conn->query($sqlMenu);
                         <li><a href="../Consultas/consultas_empleado.php?id=<?= $_SESSION['id_empleado'] ?>">Empleado</a></li>
                     <?php endif; ?>
                     <li><a href="../Login/CerrarSesion.php">Cerrar Sesión</a></li>
+                <?php endif; ?>
+                    <?php if (!empty($usuarioHeader)): ?>
+                    <li><?= htmlspecialchars($usuarioHeader) ?></li>
                 <?php endif; ?>
             </ul>
         </nav>

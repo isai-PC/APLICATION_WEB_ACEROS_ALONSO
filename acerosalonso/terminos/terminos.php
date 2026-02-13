@@ -1,9 +1,15 @@
 <?php 
+session_start();
 require_once '../conexion.php';
 
 // Obtener TODOS los términos ordenados por id
 $sql = "SELECT * FROM terminos_condiciones ORDER BY id ASC";
 $res = $conn->query($sql);
+$usuarioHeader = '';
+if (isset($_SESSION['id_empleado'])) {
+    $nombre = $_SESSION['nombre'] ?? 'Usuario'; // Lo que se guarda en el login
+    $usuarioHeader = "Usuario: $nombre";
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -26,6 +32,7 @@ $res = $conn->query($sql);
 
         <nav>
             <ul>
+                <li><a href="../paginaPrincipal.php">Inicio</a></li>
                 <li class="menu">
                     <a href="#productos" aria-haspopup="true" aria-expanded="false">Categorías</a>
                     <ul class="ContenidoMenu" role="menu" aria-label="Categorías">
@@ -48,6 +55,31 @@ $res = $conn->query($sql);
                         ?>
                     </ul>
                 </li>
+                
+                        <li class="menu">
+    <a href="#">Productos</a>
+    <ul class="ContenidoMenu">
+
+        <?php
+        $sqlProdsMenu = "SELECT id_producto, nombre_producto 
+                         FROM productos 
+                         ORDER BY nombre_producto ASC";
+        $resMenuP = $conn->query($sqlProdsMenu);
+
+        if ($resMenuP && $resMenuP->num_rows > 0) {
+            while ($prod = $resMenuP->fetch_assoc()) {
+                    $pid = $prod['id_producto'];
+                    $pnom = htmlspecialchars($prod['nombre_producto']);
+
+                    echo "<li><a href='../vistadetalle/vistadetalle.php?id=$pid'>$pnom</a></li>";
+            }
+        } else {
+            echo "<li><a href='#'>Sin productos</a></li>";
+        }
+        ?>
+    </ul>
+</li>
+                
                 <li class="menu">
                     <a href="#">Acerca de nosotros</a>
                     <ul class="ContenidoMenu">
@@ -55,7 +87,23 @@ $res = $conn->query($sql);
                     </ul>
                 </li>
 
-                <li><a href="../paginaPrincipal.php">Inicio</a></li>
+                            <?php if (!isset($_SESSION['id_empleado'])): ?>
+                    <li><a href="../Login/Login.php" class="btnLogin" style="cursor:pointer;">Login</a></li>
+                <?php else: ?>
+                    <?php if ($_SESSION['tipo_usuario'] == 2): ?>
+                        <li><a href="../Consultas/consultas.php">Administración</a></li>
+                    <?php elseif ($_SESSION['tipo_usuario'] == 1): ?>
+                        <li><a href="../Consultas/consultas_empleado.php?id=<?= $_SESSION['id_empleado'] ?>">Empleado</a></li>
+                    <?php endif; ?>
+                    <li><a href="../Login/CerrarSesion.php">Cerrar Sesión</a></li>
+                <?php endif; ?>
+
+
+
+
+                <?php if (!empty($usuarioHeader)): ?>
+                    <li><?= htmlspecialchars($usuarioHeader) ?></li>
+                <?php endif; ?>
                 
             </ul>
         </nav>
@@ -174,7 +222,8 @@ $res = $conn->query($sql);
             <div class="barra">
                 <ul class="barra-links">
                     <li><a href="../contacto/contacto.php">Contacto</a></li>
-                    <li><a href="../Preguntasfrecuentes/preguntas.php">Preguntas frecuentes</a></li>                    
+                    <li><a href="../Preguntasfrecuentes/preguntas.php">Preguntas frecuentes</a></li>    
+                    <li><a href="../terminos/terminos.php">Términos y condiciones</a></li>
                 </ul>
             </div>
 

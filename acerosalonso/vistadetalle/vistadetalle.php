@@ -51,6 +51,14 @@ $specs = [
     'Ton'     => $producto['ton'],
     'Cm'      => $producto['cm']
 ];
+
+$usuarioHeader = '';
+if (isset($_SESSION['id_empleado'])) {
+    $nombre = $_SESSION['nombre'] ?? 'Usuario'; // Lo que se guarda en el login
+    $usuarioHeader = "Usuario: $nombre";
+}
+
+// <a href="#">Productos en <?php echo htmlspecialchars($nombre_cat_actual);</a>
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -99,7 +107,7 @@ $specs = [
             </li>
 
             <li class="menu">
-                <a href="#">Productos en <?php echo htmlspecialchars($nombre_cat_actual); ?></a>
+                <a href="#">Productos</a>
                 <ul class="ContenidoMenu">
                     <?php
                     $sqlProdsMenu = "SELECT id_producto, nombre_producto FROM productos WHERE id_categoria = ? ORDER BY nombre_producto ASC";
@@ -143,6 +151,11 @@ $specs = [
                 <?php endif; ?>
                 <li><a href="../Login/CerrarSesion.php">Cerrar Sesión</a></li>
             <?php endif; ?>
+            
+            
+                <?php if (!empty($usuarioHeader)): ?>
+                    <li><?= htmlspecialchars($usuarioHeader) ?></li>
+                <?php endif; ?>
         </ul>
     </nav>
 </header>

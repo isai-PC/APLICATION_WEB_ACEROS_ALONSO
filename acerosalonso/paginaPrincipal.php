@@ -33,6 +33,7 @@ if (isset($_SESSION['id_empleado'])) {
             <ul>
 
              
+                <li><a href="paginaPrincipal.php">Inicio</a></li>
 
                 <li class="menu">
                     <a href="#productos">Categorías</a>
@@ -57,6 +58,33 @@ if (isset($_SESSION['id_empleado'])) {
                         ?>
                     </ul>
                 </li>
+                
+                
+                
+                <li class="menu">
+    <a href="#">Productos</a>
+    <ul class="ContenidoMenu">
+
+        <?php
+        $sqlProdsMenu = "SELECT id_producto, nombre_producto 
+                         FROM productos 
+                         ORDER BY nombre_producto ASC";
+        $resMenuP = $conn->query($sqlProdsMenu);
+
+        if ($resMenuP && $resMenuP->num_rows > 0) {
+            while ($prod = $resMenuP->fetch_assoc()) {
+                    $pid = $prod['id_producto'];
+                    $pnom = htmlspecialchars($prod['nombre_producto']);
+
+                    echo "<li><a href='vistadetalle/vistadetalle.php?id=$pid'>$pnom</a></li>";
+            }
+        } else {
+            echo "<li><a href='#'>Sin productos</a></li>";
+        }
+        ?>
+    </ul>
+</li>
+
 
                 <li class="menu">
                     <a href="#">Acerca de nosotros</a>
