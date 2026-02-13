@@ -17,12 +17,13 @@ $reporte = obtenerResumenPorDepartamento();
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resumen Plantilla | Aceros Alonso</title>
     <link rel="stylesheet" href="consulta.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="../Privado/StylesGenerales.css?v=<?php echo time();?>">
+    <link rel="stylesheet" href="../Privado/StylesGenerales.css?v=<?php echo time(); ?>">
     <style>
         .caja-resultados table thead th {
             background-color: #d9702e !important;
@@ -32,6 +33,7 @@ $reporte = obtenerResumenPorDepartamento();
         }
     </style>
 </head>
+
 <body>
     <header>
         <section class="logo">
@@ -44,8 +46,8 @@ $reporte = obtenerResumenPorDepartamento();
                 <li><a href="../Login/CerrarSesion.php">Cerrar sesion</a></li>
             </ul>
         </nav>
-    </header> 
-   
+    </header>
+
     <aside>
         <nav>
             <ul>
@@ -80,6 +82,19 @@ $reporte = obtenerResumenPorDepartamento();
         <section class="contenedor-reporte">
             <h1>RESUMEN DE DEPARTAMENTOS</h1>
             <p style="text-align: center; margin-bottom: 20px;">Total de empleados registrados por departamento.</p>
+            <div style="background: #dfe6ed; padding: 20px; border-radius: 8px; border: 1px solid #ccc; text-align: center; margin-bottom: 20px;">
+                <h3 style="margin-bottom: 10px; color: #333;">Consultas Rapidas</h3>
+
+                <select name="opcion_especial"
+                    style="width: 95%; padding: 12px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px; cursor: pointer; background: white;"
+                    onchange="if(this.value) window.location.href=this.value;">
+
+                    <option value="">-- Seleccione una consulta --</option>
+                    <option value="reporte_criticos.php">Empleados cuyas faltas superan el promedio general</option>
+                    <option value="reporte_resumen.php">Total de personal por departamento</option>
+                    <option value="reporte_asistencias_mes.php">Total de asistencias por departamento en cada mes</option>
+                </select>
+            </div>
 
             <section class="caja-resultados">
                 <table>
@@ -98,7 +113,9 @@ $reporte = obtenerResumenPorDepartamento();
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
-                            <tr><td colspan="2" style="text-align:center;">No hay departamentos registrados.</td></tr>
+                            <tr>
+                                <td colspan="2" style="text-align:center;">No hay departamentos registrados.</td>
+                            </tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
@@ -110,4 +127,5 @@ $reporte = obtenerResumenPorDepartamento();
         <p class="copy">Todos los derechos reservados © 2025 Aceros Alonso</p>
     </footer>
 </body>
+
 </html>

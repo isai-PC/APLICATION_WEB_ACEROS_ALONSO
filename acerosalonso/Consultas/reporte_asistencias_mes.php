@@ -15,7 +15,8 @@ $usuarioHeader = "Usuario: " . ($_SESSION['nombre'] ?? '');
 $reporte = obtenerAsistenciasPorMes();
 
 // Helper para convertir número de mes a nombre
-function nombreMes($n) {
+function nombreMes($n)
+{
     $meses = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
     return $meses[$n] ?? "Desconocido";
 }
@@ -23,12 +24,13 @@ function nombreMes($n) {
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Asistencias Mensuales | Aceros Alonso</title>
     <link rel="stylesheet" href="consulta.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="../Privado/StylesGenerales.css?v=<?php echo time();?>">
+    <link rel="stylesheet" href="../Privado/StylesGenerales.css?v=<?php echo time(); ?>">
     <style>
         .caja-resultados table thead th {
             background-color: #d9702e !important;
@@ -38,6 +40,7 @@ function nombreMes($n) {
         }
     </style>
 </head>
+
 <body>
     <header>
         <section class="logo">
@@ -50,8 +53,8 @@ function nombreMes($n) {
                 <li><a href="../Login/CerrarSesion.php">Cerrar sesion</a></li>
             </ul>
         </nav>
-    </header> 
-   
+    </header>
+
     <aside>
         <nav>
             <ul>
@@ -84,16 +87,19 @@ function nombreMes($n) {
 
     <main>
         <section class="contenedor-reporte">
-            <h1>ASISTENCIAS POR MES (2025)</h1>
+            <h1>ASISTENCIAS POR MES</h1>
 
-            <div style="background: #dfe6ed; padding: 20px; border-radius: 8px; border: 1px solid #ccc; text-align: center; margin-bottom: 30px;">
+            <div style="background: #dfe6ed; padding: 20px; border-radius: 8px; border: 1px solid #ccc; text-align: center; margin-bottom: 20px;">
                 <h3 style="margin-bottom: 10px; color: #333;">Consultas Rapidas</h3>
-                <select onchange="if(this.value) window.location.href=this.value;" style="width: 95%; padding: 12px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px; cursor: pointer; background: white;">
+
+                <select name="opcion_especial"
+                    style="width: 95%; padding: 12px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px; cursor: pointer; background: white;"
+                    onchange="if(this.value) window.location.href=this.value;">
+
                     <option value="">-- Seleccione una consulta --</option>
                     <option value="reporte_criticos.php">Empleados cuyas faltas superan el promedio general</option>
                     <option value="reporte_resumen.php">Total de personal por departamento</option>
-                    <option value="reporte_asistencias_mes.php" selected>Total de asistencias por departamento en cada mes</option>
-                    <option value="consultas.php">🏠 Volver al Panel de Reportes</option>
+                    <option value="reporte_asistencias_mes.php">Total de asistencias por departamento en cada mes</option>
                 </select>
             </div>
 
@@ -118,7 +124,9 @@ function nombreMes($n) {
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
-                            <tr><td colspan="3" style="text-align:center;">No hay registros de asistencias para el año 2025.</td></tr>
+                            <tr>
+                                <td colspan="3" style="text-align:center;">No hay registros de asistencias para el año 2025.</td>
+                            </tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
@@ -130,4 +138,5 @@ function nombreMes($n) {
         <p class="copy">Todos los derechos reservados © 2025 Aceros Alonso</p>
     </footer>
 </body>
+
 </html>
