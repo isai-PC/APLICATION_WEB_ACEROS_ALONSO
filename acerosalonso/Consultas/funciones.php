@@ -262,4 +262,19 @@ function obtenerResumenPorDepartamento() {
     $res = $conn->query($sql);
     return $res ? $res->fetch_all(MYSQLI_ASSOC) : [];
 }
+
+function obtenerAsistenciasPorMes() {
+    global $conn;
+    $sql = "SELECT d.Departamento, MONTH(i.Fecha) as Mes, COUNT(i.Id_Incidencia) as Total_Asistencias 
+            FROM incidencias i 
+            LEFT JOIN empleados e ON i.Id_Empleado = e.Id_Empleado 
+            LEFT JOIN departamentos d ON e.Id_Departamento = d.Id_Departamento 
+            WHERE i.Id_Tipo_Incidencia = 4 AND YEAR(i.Fecha) = 2025 
+            GROUP BY d.Id_Departamento, MONTH(i.Fecha) 
+            ORDER BY Mes ASC, d.Departamento ASC";
+    $res = $conn->query($sql);
+    return $res ? $res->fetch_all(MYSQLI_ASSOC) : [];
+}
 ?>
+
+
