@@ -87,18 +87,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generar'])) {
             </ul>
         </nav>
     </header> 
-   
     <aside>
         <nav>
             <ul>
                 <li><a href="../Privado/PrincipalCategorias/listadodetalle.php">Productos</a></li>
                 <li><a href="../Privado/PrincipalCategorias/Categorias/listado_Categoria.php">Categorias</a></li>
                 <!-- <li><a href="../MisionVision/editar_misionvision.php">MisionVision</a></li>-->
-                 <li class="menu">
+                <li class="menu">
                     <a href="#">Mision Vision</a>
                     <ul class="ContenidoMenu">
-                      
-                             <li><a href="../MisionVision/editar_mision.php">Mision</a></li>
+                    
+                            <li><a href="../MisionVision/editar_mision.php">Mision</a></li>
                 <li><a href="../MisionVision/editar_vision.php">Vision</a></li>
                 <li><a href="../MisionVision/editar_info.php">Por que elegirnos</a></li>
                     </ul>
@@ -112,13 +111,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generar'])) {
                 <li><a href="../../paginaPrincipal.php">Inicio</a></li>
                 
                 
-               
                 
             </ul>
         </nav>
         
     </aside>
-      <!--===========================COPIAR ESTO Y PEGAR EN LAS DEMAS PAGINAS================================== -->
+    <!--===========================COPIAR ESTO Y PEGAR EN LAS DEMAS PAGINAS================================== -->
     <script src="../Accesibilidad/accesi.js?v=<?php echo time(); ?>"></script>
     <!-- Botón de accesibilidad -->
     <div id="btnAccesibilidad" onclick="event.stopPropagation(); toggleMenuAccesibilidad()">
@@ -135,6 +133,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generar'])) {
     <main>
         <section class="contenedor-reporte">
             <h1>REPORTES</h1>
+
+            <div style="background: #dfe6ed; padding: 20px; border-radius: 8px; border: 1px solid #ccc; text-align: center; margin-bottom: 20px;">
+                <h3 style="margin-bottom: 10px; color: #333;">Consultas Rapidas</h3>
+                
+                <select name="opcion_especial" 
+                        style="width: 95%; padding: 12px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px; cursor: pointer; background: white;"
+                        onchange="if(this.value) window.location.href=this.value;">
+                    
+                    <option value="">-- Seleccione una consulta --</option>
+                    <option value="reporte_criticos.php">Empleados cuyas faltas superan el promedio general</option>
+                    <option value="reporte_resumen.php">Total de personal por departamento</option>
+                </select>
+            </div>
 
             <!-- BOTONES DE MODO  -->
             <form method="POST" class="form-opciones">
