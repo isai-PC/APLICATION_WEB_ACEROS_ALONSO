@@ -70,11 +70,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generar'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aceros Alonso | Reportes</title>
     <link rel="stylesheet" href="consulta.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="../Privado/StylesGenerales.css?v=<?php echo time();?>">
+    <link rel="stylesheet" href="../Privado/StylesGenerales.css?v=<?php echo time(); ?>">
 </head>
 
 <body>
-   
+
     <header>
         <section class="logo">
             <img src="../ACASALogoAcerosA.png" alt="Logo de Aceros Alonso">
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generar'])) {
                 <li><a href="../Login/CerrarSesion.php">Cerrar sesion</a></li>
             </ul>
         </nav>
-    </header> 
+    </header>
     <aside>
         <nav>
             <ul>
@@ -96,10 +96,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generar'])) {
                 <li class="menu">
                     <a href="#">Mision Vision</a>
                     <ul class="ContenidoMenu">
-                    
-                            <li><a href="../MisionVision/editar_mision.php">Mision</a></li>
-                <li><a href="../MisionVision/editar_vision.php">Vision</a></li>
-                <li><a href="../MisionVision/editar_info.php">Por que elegirnos</a></li>
+
+                        <li><a href="../MisionVision/editar_mision.php">Mision</a></li>
+                        <li><a href="../MisionVision/editar_vision.php">Vision</a></li>
+                        <li><a href="../MisionVision/editar_info.php">Por que elegirnos</a></li>
                     </ul>
                 </li>
                 <li><a href="../Registro/empleados.php">Empleados</a></li>
@@ -109,12 +109,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generar'])) {
                 <li><a href="../terminos/admin_terminos.php">Terminos y Condiciones</a></li>
                 <li><a href="consultas.php">Consultas</a></li>
                 <li><a href="../../paginaPrincipal.php">Inicio</a></li>
-                
-                
-                
+
+
+
             </ul>
         </nav>
-        
+
     </aside>
     <!--===========================COPIAR ESTO Y PEGAR EN LAS DEMAS PAGINAS================================== -->
     <script src="../Accesibilidad/accesi.js?v=<?php echo time(); ?>"></script>
@@ -134,20 +134,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generar'])) {
         <section class="contenedor-reporte">
             <h1>REPORTES</h1>
 
+
             <div style="background: #dfe6ed; padding: 20px; border-radius: 8px; border: 1px solid #ccc; text-align: center; margin-bottom: 20px;">
                 <h3 style="margin-bottom: 10px; color: #333;">Consultas Rapidas</h3>
-                
-                <select name="opcion_especial" 
-                        style="width: 95%; padding: 12px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px; cursor: pointer; background: white;"
-                        onchange="if(this.value) window.location.href=this.value;">
-                    
+
+                <select name="opcion_especial"
+                    style="width: 95%; padding: 12px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px; cursor: pointer; background: white;"
+                    onchange="if(this.value) window.location.href=this.value;">
+
                     <option value="">-- Seleccione una consulta --</option>
                     <option value="reporte_criticos.php">Empleados cuyas faltas superan el promedio general</option>
                     <option value="reporte_resumen.php">Total de personal por departamento</option>
                     <option value="reporte_asistencias_mes.php">Total de asistencias por departamento en cada mes</option>
                 </select>
             </div>
-
             <!-- BOTONES DE MODO  -->
             <form method="POST" class="form-opciones">
                 <button type="submit" name="modo" value="empleado" class="<?= $modo == 'empleado' ? 'activo' : 'desactivo' ?>">Por Empleado</button>
@@ -169,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generar'])) {
                             <label for="fecha_inicio">Rango de fecha:</label>g
                             <input type="date" id="fecha_inicio" name="fecha_inicio" value="<?= htmlspecialchars($fechaInicio) ?>" required>
                             <span>a</span>
-                            <input type="date" id="fecha_fin" name="fecha_fin" value="<?= htmlspecialchars($fechaFin) ?>"required>
+                            <input type="date" id="fecha_fin" name="fecha_fin" value="<?= htmlspecialchars($fechaFin) ?>" required>
                         </div>
 
                         <section class="campos-empleado">
