@@ -143,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generar'])) {
             </form>
             <br>
 
-            <!-- djgifjiogoifmhoimf -->
+            <!-- djgifjiogoifmhoimf lolis gordas-->
 
             <!-- FORMULARIO DE EMPLEADO -->
             <?php if ($modo === 'empleado'): ?>
