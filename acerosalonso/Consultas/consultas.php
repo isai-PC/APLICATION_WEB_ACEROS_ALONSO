@@ -143,6 +143,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generar'])) {
             </form>
             <br>
 
+            <!-- djgifjiogoifmhoimf -->
+
             <!-- FORMULARIO DE EMPLEADO -->
             <?php if ($modo === 'empleado'): ?>
                 <form method="POST" class="formulario-reporte">
@@ -150,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generar'])) {
                     <fieldset class="caja-filtros">
                         <legend>Filtros de búsqueda</legend>
                         <div class="rango-fecha-cont">
-                            <label for="fecha_inicio">Rango de fecha:</label>
+                            <label for="fecha_inicio">Rango de fecha:</label>g
                             <input type="date" id="fecha_inicio" name="fecha_inicio" value="<?= htmlspecialchars($fechaInicio) ?>" required>
                             <span>a</span>
                             <input type="date" id="fecha_fin" name="fecha_fin" value="<?= htmlspecialchars($fechaFin) ?>"required>
