@@ -275,6 +275,23 @@ function obtenerAsistenciasPorMes() {
     $res = $conn->query($sql);
     return $res ? $res->fetch_all(MYSQLI_ASSOC) : [];
 }
+
+function obtenerDiasSinRegistro() {
+    global $conn;
+    // Lógica para detectar huecos en el calendario de asistencia por empleado
+    $sql = "SELECT e.Id_Empleado, e.Nombre, e.Apellido_Paterno, f.Fecha
+            FROM empleados e
+            JOIN (SELECT DISTINCT Fecha FROM movimientos) f
+            WHERE NOT EXISTS (
+                SELECT 1
+                FROM movimientos m
+                WHERE m.Id_Empleado = e.Id_Empleado
+                AND m.Fecha = f.Fecha
+            )
+            ORDER BY e.Id_Empleado, f.Fecha";
+    $res = $conn->query($sql);
+    return $res ? $res->fetch_all(MYSQLI_ASSOC) : [];
+}
 ?>
 
 
