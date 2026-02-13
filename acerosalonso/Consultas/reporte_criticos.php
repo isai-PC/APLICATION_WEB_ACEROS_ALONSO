@@ -92,9 +92,10 @@ $reporte = obtenerPersonalCritico();
                     onchange="if(this.value) window.location.href=this.value;">
 
                     <option value="">-- Seleccione una consulta --</option>
-                    <option value="reporte_criticos.php">Empleados cuyas faltas superan el promedio general</option>
+                    <option value="reporte_criticos.php" >Empleados cuyas faltas superan el promedio general</option>
                     <option value="reporte_resumen.php">Total de personal por departamento</option>
                     <option value="reporte_asistencias_mes.php">Total de asistencias por departamento en cada mes</option>
+                    <option value="reporte_ausentes.php" >Días sin registro de asistencia por empleado</option>
                 </select>
             </div>
 
