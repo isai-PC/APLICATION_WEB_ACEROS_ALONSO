@@ -1,0 +1,169 @@
+<?php
+session_start();
+require_once(__DIR__ . '/../funciones.php');
+
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
+if (!isset($_SESSION['id_empleado'])) {
+    header("Location: ../../Login/Login.php");
+    exit;
+}
+
+$usuarioHeader = "Usuario: " . ($_SESSION['nombre'] ?? '');
+
+// 🔹 Valores dinámicos
+$mes = $_GET['mes'] ?? 12;
+$anio = $_GET['anio'] ?? 2025;
+$mes = (int)$mes;
+$anio = (int)$anio;
+
+//Llamamos la función
+$reporte = obtenerAsistenciasPorDepatamentoMesEspecifico($mes, $anio);
+
+// Helper para convertir número de mes a nombre
+function nombreMes($n)
+{
+    $meses = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+    return $meses[$n] ?? "Desconocido";
+}
+?>
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistencias Mensuales | Aceros Alonso</title>
+    <link rel="stylesheet" href="../consulta.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="../../Privado/StylesGenerales.css?v=<?php echo time(); ?>">
+</head>
+ <style>
+        .caja-resultados table thead th {
+            background-color: #d9702e !important;
+            color: white !important;
+            padding: 15px;
+            text-align: center;
+        }
+    </style>
+<body>
+
+    <header>
+        <section class="logo">
+            <img src="../ACASALogoAcerosA.png" alt="Logo de Aceros Alonso">
+            <h2>Aceros Alonso</h2>
+        </section>
+        <nav>
+            <ul>
+                <?= htmlspecialchars($usuarioHeader) ?>
+                <li><a href="../Login/CerrarSesion.php">Cerrar sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <aside>
+        <nav>
+            <ul>
+                <li><a href="../../Privado/PrincipalCategorias/listadodetalle.php">Productos</a></li>
+                <li><a href="../../Privado/PrincipalCategorias/Categorias/listado_Categoria.php">Categorias</a></li>
+                <li class="menu">
+                    <a href="#">Mision Vision</a>
+                    <ul class="ContenidoMenu">
+                        <li><a href="../../MisionVision/editar_mision.php">Mision</a></li>
+                        <li><a href="../../MisionVision/editar_vision.php">Vision</a></li>
+                        <li><a href="../../MisionVision/editar_info.php">Por que elegirnos</a></li>
+                    </ul>
+                </li>
+                <li><a href="../../Registro/empleados.php">Empleados</a></li>
+                <li><a href="../../Ubicacion/listar_ubicaciones.php">Ubicaciones</a></li>
+                <li><a href="../../Preguntasfrecuentes/index.php">Preguntas Frecuentes</a></li>
+                <li><a href="../../contacto/admin_contacto.php">Contacto</a></li>
+                <li><a href="../terminos/admin_terminos.php">Terminos y Condiciones</a></li>
+                <li><a href="../consultas.php">Consultas</a></li>
+                <li><a href="../../../paginaPrincipal.php">Inicio</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <script src="../Accesibilidad/accesi.js?v=<?php echo time(); ?>"></script>
+    <div id="btnAccesibilidad" onclick="event.stopPropagation(); toggleMenuAccesibilidad()">
+        <img src="../Accesibilidad/accesibilidad.png" style="width: 100%; height:100%; object-fit:cover;">
+    </div>
+    <iframe id="menuAccesibilidad" src="../Accesibilidad/MenuAccesibilidad.html" class="accesibilidad-frame"></iframe>
+
+    <main>
+        <section class="contenedor-reporte">
+            <h1>ASISTENCIAS POR DEPARTAMENTO EN UN MES ESPECIFICO</h1>
+            <div style="background: #dfe6ed; padding: 20px; border-radius: 8px; border: 1px solid #ccc; text-align: center; margin-bottom: 20px;">
+                <h3 style="margin-bottom: 10px; color: #333;">Consultas Rapidas</h3>
+
+                <select name="opcion_especial"
+                    style="width: 95%; padding: 12px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px; cursor: pointer; background: white;"
+                    onchange="if(this.value) window.location.href=this.value;">
+
+                    <option value="">Asistencias por departamento es un mes especico</option>
+                    <option value="../reporte_criticos.php">Empleados cuyas faltas superan el promedio general</option>
+                    <option value="../reporte_resumen.php">Total de personal por departamento</option>
+                    <option value="../reporte_asistencias_mes.php">Total de asistencias por departamento en cada mes</option>
+                    <option value="../reporte_ausentes.php">Días sin registro de asistencia por empleado</option>
+                </select>
+            </div>
+            <!--FORMULARIO DE FILTRO -->
+            <form method="GET" class="form-filtro">
+                <label>Mes:</label>
+                <select name="mes">
+                    <?php for ($m = 1; $m <= 12; $m++): ?>
+                        <option value="<?= $m ?>" <?= $m == $mes ? 'selected' : '' ?>>
+                            <?= nombreMes($m) ?>
+                        </option>
+                    <?php endfor; ?>
+                </select>
+
+                <label>Año:</label>
+                <input type="number" name="anio" value="<?= $anio ?>" min="2000" max="2100">
+
+                <button type="submit" class="btn-generar">Consultar</button>
+            </form>
+
+            <section class="caja-resultados">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mes</th>
+                            <th>Departamento</th>
+                            <th>Total Asistencias</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (!empty($reporte)): ?>
+                            <?php foreach ($reporte as $fila): ?>
+                                <tr>
+                                    <td><?= nombreMes($fila['Mes']) ?></td>
+                                    <td><?= htmlspecialchars($fila['Departamento']) ?></td>
+                                    <td style="text-align:center; font-weight:bold; color:#d9702e;">
+                                        <?= htmlspecialchars($fila['Total_Asistencias']) ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="3" style="text-align:center;">
+                                    No hay registros de asistencias para <?= nombreMes($mes) ?> <?= $anio ?>.
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </section>
+        </section>
+    </main>
+
+    <footer>
+        <p class="copy">Todos los derechos reservados © 2025 Aceros Alonso</p>
+    </footer>
+
+</body>
+
+</html>

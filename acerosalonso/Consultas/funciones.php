@@ -1,11 +1,11 @@
 <?php
 // Incluir la conexión
-require_once('../conexion.php');
-
+require_once(__DIR__ . '/../conexion.php');
 /**
  * Función para generar reporte de un empleado en un rango de fechas
  */
-function obtenerReporteEmpleado($idEmpleado, $fechaInicio, $fechaFin) {
+function obtenerReporteEmpleado($idEmpleado, $fechaInicio, $fechaFin)
+{
     global $conn; // <-- importante: usa la conexión global
     $reporte = [];
 
@@ -44,11 +44,11 @@ function obtenerReporteEmpleado($idEmpleado, $fechaInicio, $fechaFin) {
         // Calcular horas trabajadas
         if (count($horas) > 0) {
             $horaEntrada = $horas[0];
-            $horaSalida = $horas[count($horas)-1];
+            $horaSalida = $horas[count($horas) - 1];
             if (count($horas) % 2 == 0) {
                 for ($i = 0; $i < count($horas); $i += 2) {
                     $entrada = new DateTime($horas[$i]);
-                    $salida = new DateTime($horas[$i+1]);
+                    $salida = new DateTime($horas[$i + 1]);
                     $interval = $salida->getTimestamp() - $entrada->getTimestamp();
                     $horasTrabajadas += $interval / 3600;
                 }
@@ -56,11 +56,21 @@ function obtenerReporteEmpleado($idEmpleado, $fechaInicio, $fechaFin) {
         }
 
         // Tipo de asistencia y horas extra
-        switch($tipo) {
-            case 1: $tipoAsistencia = "FALTA"; break;
-            case 2: $tipoAsistencia = "RETARDO"; $horasExtra = max(0, $horasTrabajadas - 9); break;
-            case 3: $tipoAsistencia = "PERMISO"; break;
-            case 4: $tipoAsistencia = "ASISTENCIA"; $horasExtra = max(0, $horasTrabajadas - 9); break;
+        switch ($tipo) {
+            case 1:
+                $tipoAsistencia = "FALTA";
+                break;
+            case 2:
+                $tipoAsistencia = "RETARDO";
+                $horasExtra = max(0, $horasTrabajadas - 9);
+                break;
+            case 3:
+                $tipoAsistencia = "PERMISO";
+                break;
+            case 4:
+                $tipoAsistencia = "ASISTENCIA";
+                $horasExtra = max(0, $horasTrabajadas - 9);
+                break;
         }
 
         $reporte[] = [
@@ -84,7 +94,8 @@ function obtenerReporteEmpleado($idEmpleado, $fechaInicio, $fechaFin) {
  * FUNCIÓN: obtenerDepartamentos
  * Llena el combo box con ID y nombre del departamento.
  */
-function obtenerDepartamentos() {
+function obtenerDepartamentos()
+{
     global $conn; // <-- clave: usa la conexión existente
 
     $departamentos = [];
@@ -104,7 +115,8 @@ function obtenerDepartamentos() {
 
 
 
-function ReporteDepartamentos($idDepartamento, $fechaInicio, $fechaFin) {
+function ReporteDepartamentos($idDepartamento, $fechaInicio, $fechaFin)
+{
     global $conn; // usa la conexión ya existente
     $tabla = [];
 
@@ -149,10 +161,18 @@ function ReporteDepartamentos($idDepartamento, $fechaInicio, $fechaFin) {
             $resInc = $stmtInc->get_result();
             while ($rowInc = $resInc->fetch_assoc()) {
                 switch ((int)$rowInc['Id_Tipo_Incidencia']) {
-                    case 1: $totalFaltas++; break;
-                    case 2: $totalRetardos++; break;
-                    case 3: $totalPermisos++; break;
-                    case 4: $totalAsistencias++; break;
+                    case 1:
+                        $totalFaltas++;
+                        break;
+                    case 2:
+                        $totalRetardos++;
+                        break;
+                    case 3:
+                        $totalPermisos++;
+                        break;
+                    case 4:
+                        $totalAsistencias++;
+                        break;
                 }
             }
             $stmtInc->close();
@@ -199,7 +219,8 @@ function ReporteDepartamentos($idDepartamento, $fechaInicio, $fechaFin) {
 }
 
 
-function obtenerDatosEmpleado($idEmpleado) {
+function obtenerDatosEmpleado($idEmpleado)
+{
     global $conn;
 
     $datos = [
@@ -218,7 +239,7 @@ function obtenerDatosEmpleado($idEmpleado) {
             INNER JOIN departamentos d ON e.Id_Departamento = d.Id_Departamento
             INNER JOIN puestos p ON e.Id_Puesto = p.Id_Puesto
             WHERE e.Id_Empleado = ?";
-    
+
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $idEmpleado);
     $stmt->execute();
@@ -236,7 +257,8 @@ function obtenerDatosEmpleado($idEmpleado) {
 }
 
 //funciones nuevas agregadas mejoras
-function obtenerPersonalCritico() {
+function obtenerPersonalCritico()
+{
     global $conn;
     $sql = "SELECT CONCAT(e.Nombre, ' ', e.Apellido_Paterno) AS Empleado, d.Departamento, COUNT(i.Id_Incidencia) AS Total_Faltas 
             FROM incidencias i 
@@ -253,7 +275,8 @@ function obtenerPersonalCritico() {
     return $res ? $res->fetch_all(MYSQLI_ASSOC) : [];
 }
 
-function obtenerResumenPorDepartamento() {
+function obtenerResumenPorDepartamento()
+{
     global $conn;
     $sql = "SELECT d.Departamento, COUNT(e.Id_Empleado) AS total_empleados 
             FROM departamentos d 
@@ -263,7 +286,8 @@ function obtenerResumenPorDepartamento() {
     return $res ? $res->fetch_all(MYSQLI_ASSOC) : [];
 }
 
-function obtenerAsistenciasPorMes() {
+function obtenerAsistenciasPorMes()
+{
     global $conn;
     $sql = "SELECT d.Departamento, MONTH(i.Fecha) as Mes, COUNT(i.Id_Incidencia) as Total_Asistencias 
             FROM incidencias i 
@@ -276,7 +300,8 @@ function obtenerAsistenciasPorMes() {
     return $res ? $res->fetch_all(MYSQLI_ASSOC) : [];
 }
 
-function obtenerDiasSinRegistro() {
+function obtenerDiasSinRegistro()
+{
     global $conn;
     // Lógica para detectar huecos en el calendario de asistencia por empleado
     $sql = "SELECT e.Id_Empleado, e.Nombre, e.Apellido_Paterno, f.Fecha
@@ -292,6 +317,26 @@ function obtenerDiasSinRegistro() {
     $res = $conn->query($sql);
     return $res ? $res->fetch_all(MYSQLI_ASSOC) : [];
 }
+function obtenerAsistenciasPorDepatamentoMesEspecifico($mes, $anio)
+{
+    global $conn;
+
+    $sql = "SELECT 
+                MONTH(i.Fecha) AS Mes,
+                d.Departamento,
+                COUNT(*) AS Total_Asistencias
+            FROM empleados e 
+            INNER JOIN incidencias i ON i.Id_Empleado = e.Id_Empleado 
+            INNER JOIN departamentos d ON d.Id_Departamento = e.Id_Departamento 
+            WHERE i.Id_Tipo_Incidencia = 4 
+            AND MONTH(i.Fecha) = $mes
+            AND YEAR(i.Fecha) = $anio
+            GROUP BY d.Id_Departamento, MONTH(i.Fecha)
+            ORDER BY Total_Asistencias DESC";
+
+    $res = $conn->query($sql);
+
+    return $res ? $res->fetch_all(MYSQLI_ASSOC) : [];
+}
+
 ?>
-
-
