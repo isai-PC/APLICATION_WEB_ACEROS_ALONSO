@@ -1,4 +1,5 @@
 <?php
+include '../conexion.php';
 include 'funciones_ubicaciones.php';
 session_start();
 $usuarioHeader = '';
@@ -23,7 +24,7 @@ $datos = obtenerUbicacionPorId($conn, $_GET['id']);
     <title>Editar Ubicación</title>
     <!-- <link rel="stylesheet" href="ubicaciones.css?v=<?php echo time(); ?>"> -->
     <link rel="stylesheet" href="../Privado/StylesGenerales.css?v=<?php echo time(); ?>">
-     <link rel="icon" href="../ACASALogoAcerosA.png" type="image/png" sizes="16px">
+    <link rel="icon" href="../ACASALogoAcerosA.png" type="image/png" sizes="16px">
 </head>
 <!--para que aparezca el error en la misma ventana-->
 <?php if (isset($_GET['error'])): ?>
