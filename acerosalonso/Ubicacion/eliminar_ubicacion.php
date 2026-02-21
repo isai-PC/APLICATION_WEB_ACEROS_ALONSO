@@ -1,4 +1,5 @@
 <?php
+include '../conexion.php';
 include 'funciones_ubicaciones.php';
 
 $id = $_GET['id'];
