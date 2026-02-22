@@ -11,12 +11,11 @@ if (!isset($_SESSION['id_empleado'])) {
     exit;
 }
 
-// Parámetros dinámicos (Año actual 2026)
+// Parámetros dinámicos para el año 
 $anioActual = 2026;
 $mesSeleccionado = $_POST['mes_filtro'] ?? date('n');
 $anioSeleccionado = $_POST['anio_filtro'] ?? $anioActual;
 
-// Validación para no exceder el año actual
 if ($anioSeleccionado > $anioActual) { $anioSeleccionado = $anioActual; }
 
 $reporte = obtenerDiasSinRegistroDinamico($mesSeleccionado, $anioSeleccionado);
@@ -33,7 +32,7 @@ function getNombreMes($n) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Días sin Registro | Aceros Alonso</title>
+    <title>Auditoría de Días sin Registro | Aceros Alonso</title>
     <link rel="stylesheet" href="consulta.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="../Privado/StylesGenerales.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="estilos_especiales.css?v=<?php echo time(); ?>">
@@ -84,16 +83,17 @@ function getNombreMes($n) {
 
     <main>
         <section class="contenedor-reporte">
-            <h1>AUDITORÍA DE DÍAS SIN REGISTRO (<?= strtoupper(getNombreMes($mesSeleccionado)) ?> <?= $anioSeleccionado ?>)</h1>
+            <h1>AUDITORÍA DE ASISTENCIA (<?= strtoupper(getNombreMes($mesSeleccionado)) ?> <?= $anioSeleccionado ?>)</h1>
 
             <div class="contenedor-consultas-rapidas">
                 <h3>Consultas Rapidas</h3>
                 <select name="opcion_especial" onchange="if(this.value) window.location.href=this.value;">
                     <option value="">-- Seleccione una consulta --</option>
-                    <option value="reporte_criticos.php">Personal Crítico (Personalizado)</option>
+                    <option value="reporte_criticos.php">Empleados cuyas faltas superan el promedio general</option>
                     <option value="reporte_resumen.php">Total de personal por departamento</option>
-                    <option value="reporte_asistencias_mes.php">Total de asistencias mensuales</option>
-                    <option value="reporte_ausentes.php" selected>Días sin registro de asistencia</option>
+                    <option value="reporte_asistencias_mes.php">Total de asistencias por departamento en cada mes</option>
+                    <option value="reporte_ausentes.php">Días sin registro de asistencia por empleado</option>
+                    <option value="Consultas_3/Reporte_Asistencias_FechaEspécifica.php">Asistencias por departamento por mes especifico</option>
                 </select>
             </div>
 
@@ -120,7 +120,7 @@ function getNombreMes($n) {
                     </select>
                 </div>
 
-                <button type="submit" class="btn-filtro-naranja">Filtrar Auditoría</button>
+                <button type="submit" class="btn-filtro-naranja">Auditar Mes</button>
             </form>
 
             <section class="caja-resultados">
@@ -128,8 +128,7 @@ function getNombreMes($n) {
                     <table>
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Empleado</th>
+                                <th>Nombre del Empleado</th>
                                 <th>Apellido Paterno</th>
                                 <th>Fecha sin Registro</th>
                             </tr>
@@ -137,7 +136,6 @@ function getNombreMes($n) {
                         <tbody>
                             <?php foreach ($reporte as $fila): ?>
                                 <tr>
-                                    <td><?= htmlspecialchars($fila['Id_Empleado']) ?></td>
                                     <td><?= htmlspecialchars($fila['Nombre']) ?></td>
                                     <td><?= htmlspecialchars($fila['Apellido_Paterno']) ?></td>
                                     <td class="resaltado-critico"><?= htmlspecialchars($fila['Fecha']) ?></td>
@@ -147,7 +145,7 @@ function getNombreMes($n) {
                     </table>
                 <?php else: ?>
                     <div class="mensaje-vacio">
-                        <p>Todos los empleados tienen sus registros completos en <?= getNombreMes($mesSeleccionado) ?> de <?= $anioSeleccionado ?>.</p>
+                        <p>No se encontraron huecos de registro en <?= getNombreMes($mesSeleccionado) ?> de <?= $anioSeleccionado ?>.</p>
                     </div>
                 <?php endif; ?>
             </section>
