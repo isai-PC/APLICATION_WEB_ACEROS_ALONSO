@@ -149,7 +149,7 @@ function getNombreMes($n) {
                                 <tr>
                                     <td><?= htmlspecialchars($fila['Empleado']) ?></td>
                                     <td><?= htmlspecialchars($fila['Departamento']) ?></td>
-                                    <td class="resaltado-critico"><?= htmlspecialchars($fila['Total_Faltas']) ?></td>
+                                    <td class="resaltado-critico"style="font-weight: bold;"><?= htmlspecialchars($fila['Total_Faltas']) ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
