@@ -2,7 +2,6 @@
 session_start();
 require_once('funciones.php');
 
-// Seguridad y caché
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
@@ -12,8 +11,16 @@ if (!isset($_SESSION['id_empleado'])) {
     exit;
 }
 
+// Lógica para el filtrado dinamico
+$mesSeleccionado = $_POST['mes_filtro'] ?? date('n');
+$reporte = obtenerPersonalCriticoPorMes($mesSeleccionado);
+
 $usuarioHeader = "Usuario: " . ($_SESSION['nombre'] ?? '');
-$reporte = obtenerPersonalCritico();
+
+function getNombreMes($n) {
+    $meses = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+    return $meses[$n] ?? "Mes no válido";
+}
 ?>
 
 <!DOCTYPE html>
@@ -25,14 +32,7 @@ $reporte = obtenerPersonalCritico();
     <title>Personal Crítico | Aceros Alonso</title>
     <link rel="stylesheet" href="consulta.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="../Privado/StylesGenerales.css?v=<?php echo time(); ?>">
-    <style>
-        .caja-resultados table thead th {
-            background-color: #d9702e !important;
-            color: white !important;
-            padding: 15px;
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" href="consultas.css?v=<?php echo time(); ?>">
 </head>
 
 <body>
@@ -81,56 +81,6 @@ $reporte = obtenerPersonalCritico();
 
     <main>
         <section class="contenedor-reporte">
-            <h1>RESUMEN DE PERSONAL CRÍTICO</h1>
-            <p style="text-align: center; margin-bottom: 20px;">Personal con faltas superiores al promedio general.</p>
+            <h1>RESUMEN DE PERSONAL CRÍTICO (<?= strtoupper(getNombreMes($mesSeleccionado)) ?>)</h1>
 
-            <div style="background: #dfe6ed; padding: 20px; border-radius: 8px; border: 1px solid #ccc; text-align: center; margin-bottom: 20px;">
-                <h3 style="margin-bottom: 10px; color: #333;">Consultas Rapidas</h3>
-
-                <select name="opcion_especial"
-                    style="width: 95%; padding: 12px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px; cursor: pointer; background: white;"
-                    onchange="if(this.value) window.location.href=this.value;">
-
-                    <option value="">-- Seleccione una consulta --</option>
-                    <option value="reporte_criticos.php" >Empleados cuyas faltas superan el promedio general</option>
-                    <option value="reporte_resumen.php">Total de personal por departamento</option>
-                    <option value="reporte_asistencias_mes.php">Total de asistencias por departamento en cada mes</option>
-                    <option value="reporte_ausentes.php" >Días sin registro de asistencia por empleado</option>
-                </select>
-            </div>
-
-            <section class="caja-resultados">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Empleado</th>
-                            <th>Departamento</th>
-                            <th>Total Faltas</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (!empty($reporte)): ?>
-                            <?php foreach ($reporte as $fila): ?>
-                                <tr>
-                                    <td><?= htmlspecialchars($fila['Empleado']) ?></td>
-                                    <td><?= htmlspecialchars($fila['Departamento']) ?></td>
-                                    <td style="color: red; font-weight: bold;"><?= htmlspecialchars($fila['Total_Faltas']) ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td colspan="3" style="text-align:center;">No hay personal crítico detectado.</td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </section>
-        </section>
-    </main>
-
-    <footer>
-        <p class="copy">Todos los derechos reservados © 2025 Aceros Alonso</p>
-    </footer>
-</body>
-
-</html>
+            <div style="background: #dfe6
