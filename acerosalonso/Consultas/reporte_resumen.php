@@ -74,7 +74,7 @@ $reporte = obtenerResumenPorDepartamento();
     <main>
         <section class="contenedor-reporte">
             <h1>RESUMEN DE DEPARTAMENTOS</h1>
-            <div class="contenedor-consultas-rapidas">
+            <div>
                 <h3>Consultas Rapidas</h3>
 
                 <select name="opcion_especial" onchange="if(this.value) window.location.href=this.value;">

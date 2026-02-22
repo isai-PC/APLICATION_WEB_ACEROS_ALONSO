@@ -89,7 +89,7 @@ function nombreMes($n)
         <section class="contenedor-reporte">
             <h1>ASISTENCIAS POR MES</h1>
 
-            <div style="background: #dfe6ed; padding: 20px; border-radius: 8px; border: 1px solid #ccc; text-align: center; margin-bottom: 20px;">
+            <div>
                 <h3 style="margin-bottom: 10px; color: #333;">Consultas Rapidas</h3>
 
                 <select name="opcion_especial"
@@ -119,7 +119,7 @@ function nombreMes($n)
                                 <tr>
                                     <td><?= nombreMes($fila['Mes']) ?></td>
                                     <td><?= htmlspecialchars($fila['Departamento']) ?></td>
-                                    <td style="text-align: center; font-weight: bold; color: #d9702e;">
+                                    <td style="font-weight: bold;">
                                         <?= htmlspecialchars($fila['Total_Asistencias']) ?>
                                     </td>
                                 </tr>
