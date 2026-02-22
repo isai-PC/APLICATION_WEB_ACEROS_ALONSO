@@ -278,38 +278,62 @@ footer {
 
 /* Estilos específico de reportes criticos */
 
-/* DISEÑO DE TABLA Y ENCABEZADOS NARANJAS */
-/* Solo lo que pediste: Encabezados naranjas y contenedor de filtro */
-
-.caja-resultados table thead th {
-    background-color: #d9702e !important;
-    color: white !important;
-    padding: 15px;
-    text-align: center;
-}
-
 .filtro-mes-container {
     background: #fff;
-    padding: 15px;
-    border-radius: 8px;
+    padding: 30px;
+    border-radius: 10px;
     margin-bottom: 20px;
     border: 1px solid #ddd;
     display: flex;
-    justify-content: center;
+    flex-direction: column; 
+    align-items: center;    
+    gap: 20px;         
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.grupo-filtro {
+    display: flex;
+    flex-direction: column; 
     align-items: center;
-    gap: 15px;
+    width: 100%;
+    max-width: 300px;      
+}
+
+.grupo-filtro label {
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #444;
+    font-size: 0.95rem;
+}
+
+.select-mes-filtro, 
+.input-faltas {
+    width: 100%;           
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    text-align: center;     
+    font-size: 1rem;
 }
 
 .btn-filtro-naranja {
     background: #d9702e;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 12px 40px;
     border-radius: 5px;
     cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+    margin-top: 10px;
 }
 
-/* Fix para que el botón de accesibilidad no se haga gigante */
+.btn-filtro-naranja:hover {
+    background: #bf5f25;
+}
+
+/* REPARACIÓN DEL BOTÓN DE ACCESIBILIDAD */
 #btnAccesibilidad img {
     width: 100%;
     height: 100%;
