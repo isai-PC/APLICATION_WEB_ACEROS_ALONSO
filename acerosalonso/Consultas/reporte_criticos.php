@@ -98,7 +98,6 @@ function getNombreMes($n) {
                     <option value="reporte_resumen.php">Total de personal por departamento</option>
                     <option value="reporte_asistencias_mes.php">Total de asistencias mensuales</option>
                     <option value="reporte_ausentes.php">Días sin registro de asistencia</option>
-                    <option value="consultas.php">🏠 Volver a Reportes</option>
                 </select>
             </div>
 
@@ -107,7 +106,6 @@ function getNombreMes($n) {
                     <label>Año:</label>
                     <select name="anio_filtro" class="select-mes-filtro">
                         <?php 
-                        // Generamos años desde el 2024 hasta el actual (2026)
                         for ($y = 2024; $y <= $anioActual; $y++): ?>
                             <option value="<?= $y ?>" <?= $y == $anioSeleccionado ? 'selected' : '' ?>>
                                 <?= $y ?>
