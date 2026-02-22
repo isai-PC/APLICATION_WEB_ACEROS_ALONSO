@@ -131,7 +131,7 @@ function getNombreMes($n) {
                     <input type="number" name="limite_faltas" value="<?= $limiteFaltas ?>" min="1" max="31" style="width: 60px; padding: 8px;">
                 </div>
 
-                <button type="submit" class="btn-filtro-naranja">Consultar</button>
+                <button type="submit" class="btn-generar">Consultar</button>
             </form>
 
             <section class="caja-resultados">
