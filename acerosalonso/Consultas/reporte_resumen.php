@@ -100,7 +100,7 @@ $reporte = obtenerResumenPorDepartamento();
                             <?php foreach ($reporte as $fila): ?>
                                 <tr>
                                     <td><?= htmlspecialchars($fila['Departamento']) ?></td>
-                                    <td><?= htmlspecialchars($fila['total_empleados']) ?></td>
+                                    <td style="font-weight: bold;"> <?= htmlspecialchars($fila['total_empleados']) ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
