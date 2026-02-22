@@ -94,10 +94,11 @@ function getNombreMes($n) {
                 <h3>Consultas Rapidas</h3>
                 <select name="opcion_especial" onchange="if(this.value) window.location.href=this.value;">
                     <option value="">-- Seleccione una consulta --</option>
-                    <option value="reporte_criticos.php" selected>Personal Crítico (Personalizado)</option>
+                    <option value="reporte_criticos.php">Empleados cuyas faltas superan el promedio general</option>
                     <option value="reporte_resumen.php">Total de personal por departamento</option>
-                    <option value="reporte_asistencias_mes.php">Total de asistencias mensuales</option>
-                    <option value="reporte_ausentes.php">Días sin registro de asistencia</option>
+                    <option value="reporte_asistencias_mes.php">Total de asistencias por departamento en cada mes</option>
+                    <option value="reporte_ausentes.php">Días sin registro de asistencia por empleado</option>
+                    <option value="Consultas_3/Reporte_Asistencias_FechaEspécifica.php">Asistencias por departamento por mes especifico</option>
                 </select>
             </div>
 
