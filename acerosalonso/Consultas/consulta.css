@@ -278,6 +278,26 @@ footer {
 
 /* Estilos específico de reportes criticos */
 
+.caja-resultados table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: white;
+}
+
+.caja-resultados table thead th {
+    background-color: #d9702e !important;
+    color: white !important;             
+    padding: 15px;
+    text-align: center;
+    border-bottom: 2px solid #bf5f25;  
+}
+
+.caja-resultados table tbody td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
 .filtro-mes-container {
     background: #fff;
     padding: 30px;
