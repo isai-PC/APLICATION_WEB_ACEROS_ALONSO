@@ -1,5 +1,5 @@
 <?php
-include '../conexion.php';
+/* include(__DIR__ . '/../conexion.php'); */ //<--COLOCAR EN COMENTARIOS PARA REALIZAR PRUEBA
 
 // Obtener todas las ubi
 function obtenerUbicaciones($conn) {
