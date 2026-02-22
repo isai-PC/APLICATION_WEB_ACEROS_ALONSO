@@ -11,9 +11,17 @@ if (!isset($_SESSION['id_empleado'])) {
     exit;
 }
 
+// CAPTURA DE PARÁMETROS DINÁMICOS
+$anioActual = 2026; 
 $mesSeleccionado = $_POST['mes_filtro'] ?? date('n');
-$reporte = obtenerPersonalCriticoPorMes($mesSeleccionado, 2026); // Año actual
+$anioSeleccionado = $_POST['anio_filtro'] ?? $anioActual;
+$limiteFaltas = $_POST['limite_faltas'] ?? 1; 
 
+if ($anioSeleccionado > $anioActual) {
+    $anioSeleccionado = $anioActual;
+}
+
+$reporte = obtenerPersonalCriticoDinamico($mesSeleccionado, $anioSeleccionado, $limiteFaltas);
 $usuarioHeader = "Usuario: " . ($_SESSION['nombre'] ?? '');
 
 function getNombreMes($n) {
@@ -28,7 +36,7 @@ function getNombreMes($n) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Crítico | Aceros Alonso</title>
+    <title>Auditoría de Faltas | Aceros Alonso</title>
     <link rel="stylesheet" href="consulta.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="../Privado/StylesGenerales.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="estilos_especiales.css?v=<?php echo time(); ?>">
@@ -80,30 +88,51 @@ function getNombreMes($n) {
 
     <main>
         <section class="contenedor-reporte">
-            <h1>RESUMEN DE PERSONAL CRÍTICO (<?= strtoupper(getNombreMes($mesSeleccionado)) ?>)</h1>
+            <h1>AUDITORÍA DE FALTAS (<?= strtoupper(getNombreMes($mesSeleccionado)) ?> <?= $anioSeleccionado ?>)</h1>
 
             <div class="contenedor-consultas-rapidas">
                 <h3>Consultas Rapidas</h3>
                 <select name="opcion_especial" onchange="if(this.value) window.location.href=this.value;">
                     <option value="">-- Seleccione una consulta --</option>
-                    <option value="reporte_criticos.php" selected>Empleados cuyas faltas superan el promedio mensual</option>
+                    <option value="reporte_criticos.php" selected>Personal Crítico (Personalizado)</option>
                     <option value="reporte_resumen.php">Total de personal por departamento</option>
-                    <option value="reporte_asistencias_mes.php">Total de asistencias por departamento en cada mes</option>
-                    <option value="reporte_ausentes.php">Días sin registro de asistencia por empleado</option>
+                    <option value="reporte_asistencias_mes.php">Total de asistencias mensuales</option>
+                    <option value="reporte_ausentes.php">Días sin registro de asistencia</option>
                     <option value="consultas.php">🏠 Volver a Reportes</option>
                 </select>
             </div>
 
             <form method="POST" class="filtro-mes-container">
-                <label>Analizar Mes:</label>
-                <select name="mes_filtro">
-                    <?php for ($i = 1; $i <= 12; $i++): ?>
-                        <option value="<?= $i ?>" <?= $i == $mesSeleccionado ? 'selected' : '' ?>>
-                            <?= getNombreMes($i) ?>
-                        </option>
-                    <?php endfor; ?>
-                </select>
-                <button type="submit" class="btn-filtro-naranja">Actualizar</button>
+                <div class="grupo-filtro">
+                    <label>Año:</label>
+                    <select name="anio_filtro" class="select-mes-filtro">
+                        <?php 
+                        // Generamos años desde el 2024 hasta el actual (2026)
+                        for ($y = 2024; $y <= $anioActual; $y++): ?>
+                            <option value="<?= $y ?>" <?= $y == $anioSeleccionado ? 'selected' : '' ?>>
+                                <?= $y ?>
+                            </option>
+                        <?php endfor; ?>
+                    </select>
+                </div>
+
+                <div class="grupo-filtro">
+                    <label>Mes:</label>
+                    <select name="mes_filtro" class="select-mes-filtro">
+                        <?php for ($i = 1; $i <= 12; $i++): ?>
+                            <option value="<?= $i ?>" <?= $i == $mesSeleccionado ? 'selected' : '' ?>>
+                                <?= getNombreMes($i) ?>
+                            </option>
+                        <?php endfor; ?>
+                    </select>
+                </div>
+
+                <div class="grupo-filtro">
+                    <label>Mínimo de Faltas:</label>
+                    <input type="number" name="limite_faltas" value="<?= $limiteFaltas ?>" min="1" max="31" style="width: 60px; padding: 8px;">
+                </div>
+
+                <button type="submit" class="btn-filtro-naranja">Consultar</button>
             </form>
 
             <section class="caja-resultados">
@@ -113,7 +142,7 @@ function getNombreMes($n) {
                             <tr>
                                 <th>Empleado</th>
                                 <th>Departamento</th>
-                                <th>Faltas en <?= getNombreMes($mesSeleccionado) ?></th>
+                                <th>Total Faltas</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -128,7 +157,7 @@ function getNombreMes($n) {
                     </table>
                 <?php else: ?>
                     <div class="mensaje-vacio">
-                        <p>No se detectó personal crítico en <?= getNombreMes($mesSeleccionado) ?>.</p>
+                        <p>No se encontraron empleados con <?= $limiteFaltas ?> o más faltas en <?= getNombreMes($mesSeleccionado) ?> de <?= $anioSeleccionado ?>.</p>
                     </div>
                 <?php endif; ?>
             </section>

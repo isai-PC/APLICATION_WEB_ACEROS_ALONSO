@@ -258,8 +258,9 @@ function obtenerDatosEmpleado($idEmpleado)
 
 //funciones nuevas agregadas
 
-function obtenerPersonalCriticoPorMes($mes, $anio = 2026) { // Actualizado a 2026
+function obtenerPersonalCriticoDinamico($mes, $anio, $limiteFaltas) {
     global $conn;
+    // Usamos el límite que el usuario elija en el formulario
     $sql = "SELECT CONCAT(e.Nombre, ' ', e.Apellido_Paterno) AS Empleado, d.Departamento, COUNT(i.Id_Incidencia) AS Total_Faltas 
             FROM incidencias i 
             JOIN empleados e ON i.Id_Empleado = e.Id_Empleado 
@@ -268,16 +269,8 @@ function obtenerPersonalCriticoPorMes($mes, $anio = 2026) { // Actualizado a 202
             AND MONTH(i.Fecha) = $mes 
             AND YEAR(i.Fecha) = $anio
             GROUP BY e.Id_Empleado 
-            HAVING Total_Faltas > ( 
-                SELECT IFNULL(AVG(conteo_faltas), 0) FROM ( 
-                    SELECT COUNT(Id_Incidencia) as conteo_faltas 
-                    FROM incidencias 
-                    WHERE Id_Tipo_Incidencia = 1 
-                    AND MONTH(Fecha) = $mes 
-                    AND YEAR(Fecha) = $anio 
-                    GROUP BY Id_Empleado 
-                ) as tabla_promedios 
-            ) ORDER BY Total_Faltas DESC";
+            HAVING Total_Faltas >= $limiteFaltas 
+            ORDER BY Total_Faltas DESC";
     $res = $conn->query($sql);
     return $res ? $res->fetch_all(MYSQLI_ASSOC) : [];
 }
