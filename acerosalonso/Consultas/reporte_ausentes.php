@@ -120,7 +120,7 @@ function getNombreMes($n) {
                     </select>
                 </div>
 
-                <button type="submit" class="btn-filtro-naranja">Auditar Mes</button>
+                <button type="submit" class="btn-filtro-naranja">Cargar</button>
             </form>
 
             <section class="caja-resultados">
