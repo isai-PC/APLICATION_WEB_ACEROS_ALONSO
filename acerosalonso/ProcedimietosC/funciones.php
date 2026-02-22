@@ -4,7 +4,7 @@ require_once(__DIR__ . '/../conexion.php');
 /**
  * Función para generar reporte de un empleado en un rango de fechas
  */
-function obtenerReporteEmpleado($idEmpleado, $fechaInicio, $fechaFin)
+/**function obtenerReporteEmpleado($idEmpleado, $fechaInicio, $fechaFin)
 {
     global $conn; // <-- importante: usa la conexión global
     $reporte = [];
@@ -256,21 +256,21 @@ function obtenerDatosEmpleado($idEmpleado)
     return $datos;
 }
 
-//funciones nuevas agregadas
-
-function obtenerPersonalCriticoDinamico($mes, $anio, $limiteFaltas) {
+//funciones nuevas agregadas mejoras
+function obtenerPersonalCritico()
+{
     global $conn;
-    // Usamos el límite que el usuario elija en el formulario
     $sql = "SELECT CONCAT(e.Nombre, ' ', e.Apellido_Paterno) AS Empleado, d.Departamento, COUNT(i.Id_Incidencia) AS Total_Faltas 
             FROM incidencias i 
             JOIN empleados e ON i.Id_Empleado = e.Id_Empleado 
             JOIN departamentos d ON e.Id_Departamento = d.Id_Departamento 
             WHERE i.Id_Tipo_Incidencia = 1 
-            AND MONTH(i.Fecha) = $mes 
-            AND YEAR(i.Fecha) = $anio
             GROUP BY e.Id_Empleado 
-            HAVING Total_Faltas >= $limiteFaltas 
-            ORDER BY Total_Faltas DESC";
+            HAVING Total_Faltas > ( 
+                SELECT AVG(conteo_faltas) FROM ( 
+                    SELECT COUNT(Id_Incidencia) as conteo_faltas FROM incidencias WHERE Id_Tipo_Incidencia = 1 GROUP BY Id_Empleado 
+                ) as tabla_promedios 
+            ) ORDER BY Total_Faltas DESC";
     $res = $conn->query($sql);
     return $res ? $res->fetch_all(MYSQLI_ASSOC) : [];
 }
@@ -338,5 +338,56 @@ function obtenerAsistenciasPorDepatamentoMesEspecifico($mes, $anio)
 
     return $res ? $res->fetch_all(MYSQLI_ASSOC) : [];
 }
+
+
+function obtenerAsistenciasSuperioresPromedio() {
+    global $conn;
+
+    $sql = "
+        SELECT 
+            e.Nombre, 
+            e.Apellido_Paterno, 
+            e.Apellido_Materno, 
+            COUNT(i.Id_Incidencia) AS totalasi
+        FROM incidencias i
+        INNER JOIN empleados e 
+            ON i.Id_Empleado = e.Id_Empleado
+        WHERE i.Id_Tipo_Incidencia = 4
+        GROUP BY e.Id_Empleado
+        HAVING totalasi > (
+            SELECT AVG(totalasi)
+            FROM (
+                SELECT COUNT(a.Id_Incidencia) AS totalasi
+                FROM incidencias a
+                WHERE a.Id_Tipo_Incidencia = 4
+                GROUP BY a.Id_Empleado
+            ) AS promedio
+        )
+    ";
+
+    $resultado = $conn->query($sql);
+    return $resultado->fetch_all(MYSQLI_ASSOC);
+}
+
+function obtenerDetalleIncidencias() {
+    global $conn;
+
+    $sql = "SELECT e.Nombre, e.Apellido_Paterno, e.Apellido_Materno,
+                   d.Departamento,
+                   t.Tipo_Incidencia,
+                   i.Fecha,
+                   i.Motivo
+            FROM incidencias i
+            INNER JOIN empleados e ON i.Id_Empleado = e.Id_Empleado
+            INNER JOIN tipo_incidencia t ON i.Id_Tipo_Incidencia = t.Id_Tipo_Incidencia
+            INNER JOIN departamentos d ON e.Id_Departamento = d.Id_Departamento
+            ORDER BY i.Fecha DESC";
+
+    $resultado = $conn->query($sql);
+    return $resultado->fetch_all(MYSQLI_ASSOC);
+}
+
+
+
 
 ?>

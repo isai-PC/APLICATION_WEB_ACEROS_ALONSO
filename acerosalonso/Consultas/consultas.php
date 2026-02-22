@@ -109,6 +109,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generar'])) {
                 <li><a href="../terminos/admin_terminos.php">Terminos y Condiciones</a></li>
                 <li><a href="consultas.php">Consultas</a></li>
                 <li><a href="../../paginaPrincipal.php">Inicio</a></li>
+                 <li><a href="../ProcedimietosC/consultas.php">Consulta Empleados </a></li>
+                 <li><a href="../ProcedimietosC/consultasD.php">Consulta Departamentos </a></li>
 
 
 
@@ -130,6 +132,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generar'])) {
     </iframe>
     <!-- ===================================================================================================== -->
 
+
+
     <main>
         <section class="contenedor-reporte">
             <h1>REPORTES</h1>
@@ -148,6 +152,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generar'])) {
                     <option value="reporte_asistencias_mes.php">Total de asistencias por departamento en cada mes</option>
                     <option value="reporte_ausentes.php">Días sin registro de asistencia por empleado</option>
                     <option value="Consultas_3/Reporte_Asistencias_FechaEspécifica.php">Asistencias por departamento por mes especifico</option>
+                    <option value="reporte_De_incidencias.php">Detalle completo de incidencias</option>
+                    <option value="reporte_dese_asistencia.php">Empleados con mas asistencias que el promedio</option>
                 </select>
             </div>
             <!-- BOTONES DE MODO  -->
@@ -157,9 +163,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generar'])) {
             </form>
             <br>
 
-            <!-- djgifjiogoifmhoimf lolis gordas-->
-            <!-- djgifjiogoifmhoimf -->
-            <!-- HSKFKKFNDKSN jsfjs-->
 
             <!-- FORMULARIO DE EMPLEADO -->
             <?php if ($modo === 'empleado'): ?>

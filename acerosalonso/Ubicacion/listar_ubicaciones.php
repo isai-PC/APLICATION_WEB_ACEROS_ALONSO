@@ -1,5 +1,6 @@
 <?php
 include 'funciones_ubicaciones.php';
+require_once("../conexion.php");//NO LO QUITEN 
 
 // Inicio de sesión y usuario para header
 session_start();
