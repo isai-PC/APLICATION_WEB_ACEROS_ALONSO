@@ -74,8 +74,6 @@ $reporte = obtenerResumenPorDepartamento();
     <main>
         <section class="contenedor-reporte">
             <h1>RESUMEN DE DEPARTAMENTOS</h1>
-            <p style="text-align: center; margin-bottom: 20px;">Total de empleados registrados por departamento.</p>
-            
             <div class="contenedor-consultas-rapidas">
                 <h3>Consultas Rapidas</h3>
 
