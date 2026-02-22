@@ -2,7 +2,6 @@
 session_start();
 require_once('funciones.php');
 
-// Seguridad y caché institucional de Aceros Alonso
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
@@ -12,9 +11,8 @@ if (!isset($_SESSION['id_empleado'])) {
     exit;
 }
 
-// Lógica de filtrado por mes (Año actual 2026)
 $mesSeleccionado = $_POST['mes_filtro'] ?? date('n');
-$reporte = obtenerPersonalCriticoPorMes($mesSeleccionado, 2026);
+$reporte = obtenerPersonalCriticoPorMes($mesSeleccionado, 2026); // Año actual
 
 $usuarioHeader = "Usuario: " . ($_SESSION['nombre'] ?? '');
 
@@ -76,7 +74,7 @@ function getNombreMes($n) {
 
     <script src="../Accesibilidad/accesi.js?v=<?php echo time(); ?>"></script>
     <div id="btnAccesibilidad" onclick="event.stopPropagation(); toggleMenuAccesibilidad()">
-        <img src="../Accesibilidad/accesibilidad.png" alt="Accesibilidad">
+        <img src="../Accesibilidad/accesibilidad.png">
     </div>
     <iframe id="menuAccesibilidad" src="../Accesibilidad/MenuAccesibilidad.html" class="accesibilidad-frame"></iframe>
 
@@ -86,18 +84,19 @@ function getNombreMes($n) {
 
             <div class="contenedor-consultas-rapidas">
                 <h3>Consultas Rapidas</h3>
-                <select name="opcion_especial" class="select-navegacion" onchange="if(this.value) window.location.href=this.value;">
+                <select name="opcion_especial" onchange="if(this.value) window.location.href=this.value;">
                     <option value="">-- Seleccione una consulta --</option>
                     <option value="reporte_criticos.php" selected>Empleados cuyas faltas superan el promedio mensual</option>
                     <option value="reporte_resumen.php">Total de personal por departamento</option>
                     <option value="reporte_asistencias_mes.php">Total de asistencias por departamento en cada mes</option>
                     <option value="reporte_ausentes.php">Días sin registro de asistencia por empleado</option>
+                    <option value="consultas.php">🏠 Volver a Reportes</option>
                 </select>
             </div>
 
             <form method="POST" class="filtro-mes-container">
                 <label>Analizar Mes:</label>
-                <select name="mes_filtro" class="select-mes-filtro">
+                <select name="mes_filtro">
                     <?php for ($i = 1; $i <= 12; $i++): ?>
                         <option value="<?= $i ?>" <?= $i == $mesSeleccionado ? 'selected' : '' ?>>
                             <?= getNombreMes($i) ?>
