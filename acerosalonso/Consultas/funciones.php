@@ -258,7 +258,7 @@ function obtenerDatosEmpleado($idEmpleado)
 
 //funciones nuevas agregadas
 
-function obtenerPersonalCriticoPorMes($mes, $anio = 2025) {
+function obtenerPersonalCriticoPorMes($mes, $anio = 2026) { // Actualizado a 2026
     global $conn;
     $sql = "SELECT CONCAT(e.Nombre, ' ', e.Apellido_Paterno) AS Empleado, d.Departamento, COUNT(i.Id_Incidencia) AS Total_Faltas 
             FROM incidencias i 
@@ -269,7 +269,7 @@ function obtenerPersonalCriticoPorMes($mes, $anio = 2025) {
             AND YEAR(i.Fecha) = $anio
             GROUP BY e.Id_Empleado 
             HAVING Total_Faltas > ( 
-                SELECT AVG(conteo_faltas) FROM ( 
+                SELECT IFNULL(AVG(conteo_faltas), 0) FROM ( 
                     SELECT COUNT(Id_Incidencia) as conteo_faltas 
                     FROM incidencias 
                     WHERE Id_Tipo_Incidencia = 1 

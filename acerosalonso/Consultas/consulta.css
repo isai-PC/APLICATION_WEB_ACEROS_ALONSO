@@ -278,6 +278,7 @@ footer {
 
 /* Estilos específico de reportes criticos */
 
+/* DISEÑO DE TABLA Y ENCABEZADOS NARANJAS */
 .caja-resultados table thead th {
     background-color: #d9702e !important;
     color: white !important;
@@ -286,6 +287,30 @@ footer {
     border: 1px solid #c25f25;
 }
 
+.resaltado-critico {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* CONTENEDOR DEL SELECT DE NAVEGACIÓN */
+.contenedor-consultas-rapidas {
+    background: #dfe6ed;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.select-navegacion {
+    width: 95%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* FORMULARIO DE FILTRO POR MES */
 .filtro-mes-container {
     background: #fff;
     padding: 15px;
@@ -296,27 +321,21 @@ footer {
     justify-content: center;
     align-items: center;
     gap: 15px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .btn-filtro-naranja {
     background: #d9702e;
     color: white;
     border: none;
-    padding: 10px 25px;
+    padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
-    font-weight: bold;
-    transition: background 0.3s;
 }
 
-.btn-filtro-naranja:hover {
-    background: #bf5f25;
-}
-
-.select-mes-filtro {
-    padding: 10px;
-    border-radius: 5px;
+.mensaje-vacio {
+    background: #fff;
+    padding: 20px;
     border: 1px solid #ccc;
-    min-width: 150px;
+    text-align: center;
+    border-radius: 8px;
 }

@@ -2,6 +2,7 @@
 session_start();
 require_once('funciones.php');
 
+// Seguridad y caché institucional de Aceros Alonso
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
@@ -11,9 +12,9 @@ if (!isset($_SESSION['id_empleado'])) {
     exit;
 }
 
-// Lógica para el filtrado dinamico
+// Lógica de filtrado por mes (Año actual 2026)
 $mesSeleccionado = $_POST['mes_filtro'] ?? date('n');
-$reporte = obtenerPersonalCriticoPorMes($mesSeleccionado);
+$reporte = obtenerPersonalCriticoPorMes($mesSeleccionado, 2026);
 
 $usuarioHeader = "Usuario: " . ($_SESSION['nombre'] ?? '');
 
@@ -32,7 +33,7 @@ function getNombreMes($n) {
     <title>Personal Crítico | Aceros Alonso</title>
     <link rel="stylesheet" href="consulta.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="../Privado/StylesGenerales.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="consultas.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="estilos_especiales.css?v=<?php echo time(); ?>">
 </head>
 
 <body>
@@ -43,7 +44,7 @@ function getNombreMes($n) {
         </section>
         <nav>
             <ul>
-                <?= htmlspecialchars($usuarioHeader) ?>
+                <li><?= htmlspecialchars($usuarioHeader) ?></li>
                 <li><a href="../Login/CerrarSesion.php">Cerrar sesion</a></li>
             </ul>
         </nav>
@@ -75,7 +76,7 @@ function getNombreMes($n) {
 
     <script src="../Accesibilidad/accesi.js?v=<?php echo time(); ?>"></script>
     <div id="btnAccesibilidad" onclick="event.stopPropagation(); toggleMenuAccesibilidad()">
-        <img src="../Accesibilidad/accesibilidad.png" style="width: 100%; height:100%; object-fit:cover;">
+        <img src="../Accesibilidad/accesibilidad.png" alt="Accesibilidad">
     </div>
     <iframe id="menuAccesibilidad" src="../Accesibilidad/MenuAccesibilidad.html" class="accesibilidad-frame"></iframe>
 
@@ -83,4 +84,60 @@ function getNombreMes($n) {
         <section class="contenedor-reporte">
             <h1>RESUMEN DE PERSONAL CRÍTICO (<?= strtoupper(getNombreMes($mesSeleccionado)) ?>)</h1>
 
-            <div style="background: #dfe6
+            <div class="contenedor-consultas-rapidas">
+                <h3>Consultas Rapidas</h3>
+                <select name="opcion_especial" class="select-navegacion" onchange="if(this.value) window.location.href=this.value;">
+                    <option value="">-- Seleccione una consulta --</option>
+                    <option value="reporte_criticos.php" selected>Empleados cuyas faltas superan el promedio mensual</option>
+                    <option value="reporte_resumen.php">Total de personal por departamento</option>
+                    <option value="reporte_asistencias_mes.php">Total de asistencias por departamento en cada mes</option>
+                    <option value="reporte_ausentes.php">Días sin registro de asistencia por empleado</option>
+                </select>
+            </div>
+
+            <form method="POST" class="filtro-mes-container">
+                <label>Analizar Mes:</label>
+                <select name="mes_filtro" class="select-mes-filtro">
+                    <?php for ($i = 1; $i <= 12; $i++): ?>
+                        <option value="<?= $i ?>" <?= $i == $mesSeleccionado ? 'selected' : '' ?>>
+                            <?= getNombreMes($i) ?>
+                        </option>
+                    <?php endfor; ?>
+                </select>
+                <button type="submit" class="btn-filtro-naranja">Actualizar</button>
+            </form>
+
+            <section class="caja-resultados">
+                <?php if (!empty($reporte)): ?>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Empleado</th>
+                                <th>Departamento</th>
+                                <th>Faltas en <?= getNombreMes($mesSeleccionado) ?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($reporte as $fila): ?>
+                                <tr>
+                                    <td><?= htmlspecialchars($fila['Empleado']) ?></td>
+                                    <td><?= htmlspecialchars($fila['Departamento']) ?></td>
+                                    <td class="resaltado-critico"><?= htmlspecialchars($fila['Total_Faltas']) ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php else: ?>
+                    <div class="mensaje-vacio">
+                        <p>No se detectó personal crítico en <?= getNombreMes($mesSeleccionado) ?>.</p>
+                    </div>
+                <?php endif; ?>
+            </section>
+        </section>
+    </main>
+
+    <footer>
+        <p class="copy">Todos los derechos reservados © 2025 Aceros Alonso</p>
+    </footer>
+</body>
+</html>
