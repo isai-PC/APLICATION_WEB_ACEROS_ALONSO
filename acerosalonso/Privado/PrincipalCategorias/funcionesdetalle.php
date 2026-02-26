@@ -76,26 +76,24 @@ function obtener_producto(mysqli $conn, int $id): ?array {
 }
 
 function crear_producto(mysqli $conn, array $datos): bool {
-    // Llamada al Procedimiento Almacenado
+    // 11 parámetros para Aceros Alonso
     $sql = "CALL sp_InsertarProductoConHistorial(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    
     $stmt = $conn->prepare($sql);
     
-    // Mantenemos los tipos de datos originales: isssddssdds
     $stmt->bind_param("isssddssdds", 
-        $datos['id_categoria'], 
+        $datos['id_categoria'],    
         $datos['nombre_producto'], 
-        $datos['unidad_medida'], 
-        $datos['calibre'], 
-        $datos['metros'], 
-        $datos['kg'], 
-        $datos['color'], 
-        $datos['ced'], 
-        $datos['ton'], 
-        $datos['cm'], 
-        $datos['ImagenesProducto']
+        $datos['unidad_medida'],   
+        $datos['calibre'],         
+        $datos['metros'],          
+        $datos['kg'],              
+        $datos['color'],           
+        $datos['ced'],             
+        $datos['ton'],             
+        $datos['cm'],              
+        $datos['ImagenesProducto'] 
     );
-    
+
     $ok = $stmt->execute();
     $stmt->close();
     return $ok;
