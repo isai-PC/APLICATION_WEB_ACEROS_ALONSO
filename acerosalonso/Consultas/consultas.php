@@ -151,7 +151,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generar'])) {
                     <option value="reporte_resumen.php">Total de personal por departamento</option>
                     <option value="reporte_asistencias_mes.php">Total de asistencias por departamento en cada mes</option>
                     <option value="reporte_ausentes.php">Días sin registro de asistencia por empleado</option>
-                    <option value="Consultas_3/Reporte_Asistencias_FechaEspécifica.php">Asistencias por departamento por mes especifico</option>
+                    <option value="Consultas_3/Reporte_Asistencias_FechaEspécifica.php">Asistencias por departamento por mes</option>
+                    <!-- <option value="Consultas_3/Incidencias_por_Departamento.php">Incidencias por departamento</option> -->
                     <option value="reporte_De_incidencias.php">Detalle completo de incidencias</option>
                     <option value="reporte_dese_asistencia.php">Empleados con mas asistencias que el promedio</option>
                 </select>

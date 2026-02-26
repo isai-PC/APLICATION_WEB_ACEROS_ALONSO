@@ -11,9 +11,20 @@ if (!isset($_SESSION['id_empleado'])) {
     exit;
 }
 
+// Parámetros dinámicos para el año 
+$anioActual = 2026;
+$mesSeleccionado = $_POST['mes_filtro'] ?? date('n');
+$anioSeleccionado = $_POST['anio_filtro'] ?? $anioActual;
+
+if ($anioSeleccionado > $anioActual) { $anioSeleccionado = $anioActual; }
+
+$reporte = obtenerDiasSinRegistroDinamico($mesSeleccionado, $anioSeleccionado);
 $usuarioHeader = "Usuario: " . ($_SESSION['nombre'] ?? '');
-// Obtenemos los días sin registro mediante la nueva función
-$reporte = obtenerDiasSinRegistro();
+
+function getNombreMes($n) {
+    $meses = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+    return $meses[$n] ?? "Mes no válido";
+}
 ?>
 
 <!DOCTYPE html>
@@ -21,18 +32,10 @@ $reporte = obtenerDiasSinRegistro();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Días sin Registro | Aceros Alonso</title>
+    <title>Auditoría de Días sin Registro | Aceros Alonso</title>
     <link rel="stylesheet" href="consulta.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="../Privado/StylesGenerales.css?v=<?php echo time();?>">
-    <style>
-        /* Encabezados en naranja para consistencia visual */
-        .caja-resultados table thead th {
-            background-color: #d9702e !important;
-            color: white !important;
-            padding: 15px;
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" href="../Privado/StylesGenerales.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="estilos_especiales.css?v=<?php echo time(); ?>">
 </head>
 <body>
     <header>
@@ -42,12 +45,12 @@ $reporte = obtenerDiasSinRegistro();
         </section>
         <nav>
             <ul>
-                <?= htmlspecialchars($usuarioHeader) ?>
+                <li><?= htmlspecialchars($usuarioHeader) ?></li>
                 <li><a href="../Login/CerrarSesion.php">Cerrar sesion</a></li>
             </ul>
         </nav>
-    </header> 
-   
+    </header>
+
     <aside>
         <nav>
             <ul>
@@ -74,52 +77,77 @@ $reporte = obtenerDiasSinRegistro();
 
     <script src="../Accesibilidad/accesi.js?v=<?php echo time(); ?>"></script>
     <div id="btnAccesibilidad" onclick="event.stopPropagation(); toggleMenuAccesibilidad()">
-        <img src="../Accesibilidad/accesibilidad.png" style="width: 100%; height:100%; object-fit:cover;">
+        <img src="../Accesibilidad/accesibilidad.png">
     </div>
     <iframe id="menuAccesibilidad" src="../Accesibilidad/MenuAccesibilidad.html" class="accesibilidad-frame"></iframe>
 
     <main>
         <section class="contenedor-reporte">
-            <h1>DÍAS SIN REGISTRO DE ASISTENCIA</h1>
+            <h1>AUDITORÍA DE ASISTENCIA (<?= strtoupper(getNombreMes($mesSeleccionado)) ?> <?= $anioSeleccionado ?>)</h1>
 
-            <div style="background: #dfe6ed; padding: 20px; border-radius: 8px; border: 1px solid #ccc; text-align: center; margin-bottom: 30px;">
-                <h3 style="margin-bottom: 10px; color: #333;">Consultas Rapidas</h3>
-                <select onchange="if(this.value) window.location.href=this.value;" style="width: 95%; padding: 12px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px; cursor: pointer; background: white;">
+            <div class="contenedor-consultas-rapidas">
+                <h3>Consultas Rapidas</h3>
+                <select name="opcion_especial" onchange="if(this.value) window.location.href=this.value;">
                     <option value="">-- Seleccione una consulta --</option>
                     <option value="reporte_criticos.php">Empleados cuyas faltas superan el promedio general</option>
                     <option value="reporte_resumen.php">Total de personal por departamento</option>
                     <option value="reporte_asistencias_mes.php">Total de asistencias por departamento en cada mes</option>
-                    <option value="reporte_ausentes.php" >Días sin registro de asistencia por empleado</option>
+                    <option value="reporte_ausentes.php">Días sin registro de asistencia por empleado</option>
+                    <option value="Consultas_3/Reporte_Asistencias_FechaEspécifica.php">Asistencias por departamento por mes especifico</option>
                 </select>
             </div>
 
+            <form method="POST" class="filtro-mes-container">
+                <div class="grupo-filtro">
+                    <label>Año:</label>
+                    <select name="anio_filtro" class="select-mes-filtro">
+                        <?php for ($y = 2024; $y <= $anioActual; $y++): ?>
+                            <option value="<?= $y ?>" <?= $y == $anioSeleccionado ? 'selected' : '' ?>>
+                                <?= $y ?>
+                            </option>
+                        <?php endfor; ?>
+                    </select>
+                </div>
+
+                <div class="grupo-filtro">
+                    <label>Mes:</label>
+                    <select name="mes_filtro" class="select-mes-filtro">
+                        <?php for ($i = 1; $i <= 12; $i++): ?>
+                            <option value="<?= $i ?>" <?= $i == $mesSeleccionado ? 'selected' : '' ?>>
+                                <?= getNombreMes($i) ?>
+                            </option>
+                        <?php endfor; ?>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-filtro-naranja">Cargar</button>
+            </form>
+
             <section class="caja-resultados">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Empleado</th>
-                            <th>Apellido Paterno</th>
-                            <th>Fecha sin Registro</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (!empty($reporte)): ?>
+                <?php if (!empty($reporte)): ?>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre del Empleado</th>
+                                <th>Apellido Paterno</th>
+                                <th>Fecha sin Registro</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                             <?php foreach ($reporte as $fila): ?>
                                 <tr>
-                                    <td style="text-align: center; font-weight: bold;"><?= htmlspecialchars($fila['Id_Empleado']) ?></td>
                                     <td><?= htmlspecialchars($fila['Nombre']) ?></td>
                                     <td><?= htmlspecialchars($fila['Apellido_Paterno']) ?></td>
-                                    <td style="text-align: center; color: #d9702e; font-weight: bold;">
-                                        <?= htmlspecialchars($fila['Fecha']) ?>
-                                    </td>
+                                    <td class="resaltado-critico"><?= htmlspecialchars($fila['Fecha']) ?></td>
                                 </tr>
                             <?php endforeach; ?>
-                        <?php else: ?>
-                            <tr><td colspan="4" style="text-align:center;">Todos los empleados tienen sus registros al día.</td></tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                <?php else: ?>
+                    <div class="mensaje-vacio">
+                        <p>No se encontraron huecos de registro en <?= getNombreMes($mesSeleccionado) ?> de <?= $anioSeleccionado ?>.</p>
+                    </div>
+                <?php endif; ?>
             </section>
         </section>
     </main>
