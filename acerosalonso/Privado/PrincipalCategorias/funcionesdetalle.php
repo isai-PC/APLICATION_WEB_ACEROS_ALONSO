@@ -76,30 +76,29 @@ function obtener_producto(mysqli $conn, int $id): ?array {
 }
 
 function crear_producto(mysqli $conn, array $datos): bool {
-    //Preparamos el llamado
+    // Preparamos el llamado al procedimiento de 11 parámetros
     $sql = "CALL sp_InsertarProductoConHistorial(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
 
     if (!$stmt) {
-        // Esto te avisará si el procedimiento no existe o está mal escrito
-        die("Error al preparar el procedimiento: " . $conn->error);
+        // avisará si el procedimiento no se cargó bien en MySQL
+        return false; 
     }
-
-    // Vinculamos 
     $stmt->bind_param("isssddssdds", 
-        $datos['id_categoria'], $datos['nombre_producto'], $datos['unidad_medida'], 
-        $datos['calibre'], $datos['metros'], $datos['kg'], $datos['color'], 
-        $datos['ced'], $datos['ton'], $datos['cm'], $datos['ImagenesProducto']
+        $datos['id_categoria'],    
+        $datos['nombre_producto'], 
+        $datos['unidad_medida'],   
+        $datos['calibre'],         
+        $datos['metros'],          
+        $datos['kg'],              
+        $datos['color'],           
+        $datos['ced'],             
+        $datos['ton'],             
+        $datos['cm'],              
+        $datos['ImagenesProducto'] 
     );
 
-    //  Ejecutamos y capturamos error
     $ok = $stmt->execute();
-    
-    if (!$ok) {
-        //dirá por qué falló la transacción
-        die("Error en la transacción SQL: " . $stmt->error);
-    }
-
     $stmt->close();
     return $ok;
 }
