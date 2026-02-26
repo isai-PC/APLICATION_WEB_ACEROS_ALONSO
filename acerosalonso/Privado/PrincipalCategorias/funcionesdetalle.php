@@ -76,25 +76,30 @@ function obtener_producto(mysqli $conn, int $id): ?array {
 }
 
 function crear_producto(mysqli $conn, array $datos): bool {
-    // 11 parámetros para Aceros Alonso
+    // 1. Preparamos el llamado
     $sql = "CALL sp_InsertarProductoConHistorial(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    
+
+    if (!$stmt) {
+        // Esto te avisará si el procedimiento no existe o está mal escrito
+        die("Error al preparar el procedimiento: " . $conn->error);
+    }
+
+    // 2. Vinculamos (Asegúrate de que sean 11 parámetros)
     $stmt->bind_param("isssddssdds", 
-        $datos['id_categoria'],    
-        $datos['nombre_producto'], 
-        $datos['unidad_medida'],   
-        $datos['calibre'],         
-        $datos['metros'],          
-        $datos['kg'],              
-        $datos['color'],           
-        $datos['ced'],             
-        $datos['ton'],             
-        $datos['cm'],              
-        $datos['ImagenesProducto'] 
+        $datos['id_categoria'], $datos['nombre_producto'], $datos['unidad_medida'], 
+        $datos['calibre'], $datos['metros'], $datos['kg'], $datos['color'], 
+        $datos['ced'], $datos['ton'], $datos['cm'], $datos['ImagenesProducto']
     );
 
+    // 3. Ejecutamos y capturamos error
     $ok = $stmt->execute();
+    
+    if (!$ok) {
+        // ¡ESTO ES LO MÁS IMPORTANTE! Te dirá por qué falló la transacción
+        die("Error en la transacción SQL: " . $stmt->error);
+    }
+
     $stmt->close();
     return $ok;
 }
