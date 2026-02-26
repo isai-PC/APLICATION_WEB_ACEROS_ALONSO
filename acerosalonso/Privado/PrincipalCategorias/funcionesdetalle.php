@@ -120,6 +120,7 @@ function actualizar_producto(mysqli $conn, int $id, array $datos, bool $conImage
     return $ok;
 }
 
+
 function eliminar_producto(mysqli $conn, int $id): bool {
     $stmt = $conn->prepare("DELETE FROM productos WHERE id_producto=?");
     $stmt->bind_param("i", $id);
