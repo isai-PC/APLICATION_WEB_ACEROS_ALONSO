@@ -76,27 +76,31 @@ function obtener_producto(mysqli $conn, int $id): ?array {
 }
 
 function crear_producto(mysqli $conn, array $datos): bool {
-    // El llamado al procedimiento con 11 signos de interrogación
+    // 1. Preparamos el llamado
     $sql = "CALL sp_InsertarProductoConHistorial(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    
-    if (!$stmt) return false;
 
+    if (!$stmt) {
+        // Si sale este error, es que el PROCEDIMIENTO no existe en MySQL
+        die("ERROR CRÍTICO (Prepare): " . $conn->error);
+    }
+
+    // 2. Vinculamos los 11 datos
     $stmt->bind_param("isssddssdds", 
-        $datos['id_categoria'],   
-        $datos['nombre_producto'], 
-        $datos['unidad_medida'],   
-        $datos['calibre'],         
-        $datos['metros'],          
-        $datos['kg'],              
-        $datos['color'],           
-        $datos['ced'],             
-        $datos['ton'],             
-        $datos['cm'],              
-        $datos['ImagenesProducto'] 
+        $datos['id_categoria'], $datos['nombre_producto'], $datos['unidad_medida'], 
+        $datos['calibre'], $datos['metros'], $datos['kg'], $datos['color'], 
+        $datos['ced'], $datos['ton'], $datos['cm'], $datos['ImagenesProducto']
     );
 
+    // 3. Ejecutamos
     $ok = $stmt->execute();
+    
+    if (!$ok) {
+        // ¡ESTO NOS DIRÁ EL ERROR REAL!
+        // Ejemplo: "Column count doesn't match" o "Unknown column..."
+        die("ERROR CRÍTICO (Execute): " . $stmt->error);
+    }
+
     $stmt->close();
     return $ok;
 }
