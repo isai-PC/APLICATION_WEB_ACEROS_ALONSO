@@ -76,16 +76,14 @@ function obtener_producto(mysqli $conn, int $id): ?array {
 }
 
 function crear_producto(mysqli $conn, array $datos): bool {
-    // Preparamos el llamado al procedimiento de 11 parámetros
+    // El llamado al procedimiento con 11 signos de interrogación
     $sql = "CALL sp_InsertarProductoConHistorial(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
+    
+    if (!$stmt) return false;
 
-    if (!$stmt) {
-        // avisará si el procedimiento no se cargó bien en MySQL
-        return false; 
-    }
     $stmt->bind_param("isssddssdds", 
-        $datos['id_categoria'],    
+        $datos['id_categoria'],   
         $datos['nombre_producto'], 
         $datos['unidad_medida'],   
         $datos['calibre'],         
