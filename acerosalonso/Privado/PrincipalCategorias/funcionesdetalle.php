@@ -76,14 +76,26 @@ function obtener_producto(mysqli $conn, int $id): ?array {
 }
 
 function crear_producto(mysqli $conn, array $datos): bool {
-    $sql = "INSERT INTO productos (id_categoria, nombre_producto, unidad_medida, calibre, metros, kg, color, ced, ton, cm, ImagenesProducto)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    // Llamada al Procedimiento Almacenado
+    $sql = "CALL sp_InsertarProductoConHistorial(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    
     $stmt = $conn->prepare($sql);
+    
+    // Mantenemos los tipos de datos originales: isssddssdds
     $stmt->bind_param("isssddssdds", 
-        $datos['id_categoria'], $datos['nombre_producto'], $datos['unidad_medida'], 
-        $datos['calibre'], $datos['metros'], $datos['kg'], $datos['color'], 
-        $datos['ced'], $datos['ton'], $datos['cm'], $datos['ImagenesProducto']
+        $datos['id_categoria'], 
+        $datos['nombre_producto'], 
+        $datos['unidad_medida'], 
+        $datos['calibre'], 
+        $datos['metros'], 
+        $datos['kg'], 
+        $datos['color'], 
+        $datos['ced'], 
+        $datos['ton'], 
+        $datos['cm'], 
+        $datos['ImagenesProducto']
     );
+    
     $ok = $stmt->execute();
     $stmt->close();
     return $ok;
@@ -119,6 +131,7 @@ function actualizar_producto(mysqli $conn, int $id, array $datos, bool $conImage
     $stmt->close();
     return $ok;
 }
+
 
 function eliminar_producto(mysqli $conn, int $id): bool {
     $stmt = $conn->prepare("DELETE FROM productos WHERE id_producto=?");
