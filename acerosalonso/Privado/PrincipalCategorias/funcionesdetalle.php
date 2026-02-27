@@ -1,4 +1,7 @@
 <?php
+
+use PhpParser\Node\Stmt;
+
 require_once __DIR__ . '/../../conexion.php';
 
 function subir_imagen_producto(array $file): ?string
@@ -82,154 +85,77 @@ function obtener_producto(mysqli $conn, int $id): ?array
 
 function crear_producto(mysqli $conn, array $datos): bool
 {
-    mysqli_begin_transaction($conn);
-    try {
-        // Normalizar valores numéricos: null → 0
-        $metros = $datos['metros'] ?? 0;
-        $kg = $datos['kg'] ?? 0;
-        $ton = $datos['ton'] ?? 0;
-        $cm = $datos['cm'] ?? 0;
-        
-        $sql1 = "INSERT INTO productos (id_categoria, nombre_producto, unidad_medida, calibre, metros, kg, color, ced, ton, cm, ImagenesProducto)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt1 = $conn->prepare($sql1);
-        $stmt1->bind_param(
-            "isssddssddds",
-            $datos['id_categoria'],
-            $datos['nombre_producto'],
-            $datos['unidad_medida'],
-            $datos['calibre'],
-            $metros,
-            $kg,
-            $datos['color'],
-            $datos['ced'],
-            $ton,
-            $cm,
-            $datos['ImagenesProducto']
-        );
-        $stmt1->execute();
-
-        $idProducto = $stmt1->insert_id;
-        //Insercion de datos a la tabla de historial
-        $sql2 = "INSERT INTO historial_productos (id_producto_ref, id_categoria, nombre_producto, unidad_medida, calibre, metros, kg, color, ced, ton, cm, ImagenesProducto)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt2 = $conn->prepare($sql2);
-        $stmt2->bind_param(
-            "iissddssddds",
-            $idProducto,
-            $datos['id_categoria'],
-            $datos['nombre_producto'],
-            $datos['unidad_medida'],
-            $datos['calibre'],
-            $metros,
-            $kg,
-            $datos['color'],
-            $datos['ced'],
-            $ton,
-            $cm,
-            $datos['ImagenesProducto']
-        );
-        $stmt2->execute();
-
-        $stmt1->close();
-        $stmt2->close();
-
-        mysqli_commit($conn);
-        return true;
-    } catch (Exception $e) {
-        mysqli_rollback($conn);
-        return false;
+    // Normalizar valores
+    $metros = $datos['metros'] ?? 0;
+    $kg = $datos['kg'] ?? 0;
+    $ton = $datos['ton'] ?? 0;
+    $cm = $datos['cm'] ?? 0;
+    $stmt1 = $conn->prepare("CALL sp_crear_producto(?,?,?,?,?,?,?,?,?,?,?)");
+    $stmt1->bind_param(
+        "isssddssdds",
+        $datos['id_categoria'],
+        $datos['nombre_producto'],
+        $datos['unidad_medida'],
+        $datos['calibre'],
+        $metros,
+        $kg,
+        $datos['color'],
+        $datos['ced'],
+        $ton,
+        $cm,
+        $datos['ImagenesProducto']
+    );
+    $ok = $stmt1->execute();
+    if (!$ok) {
+        throw new Exception($stmt1->error);
     }
+    while ($conn->more_results() && $conn->next_result()) {
+        $conn->store_result();
+    }
+    $stmt1->close();
+    return $ok;
 }
-
 function actualizar_producto(mysqli $conn, int $id, array $datos, bool $conImagen): bool
 {
-    mysqli_begin_transaction($conn);
-    try {
-        // Normalizar valores numéricos: null → 0
-        $metros = $datos['metros'] ?? 0;
-        $kg = $datos['kg'] ?? 0;
-        $ton = $datos['ton'] ?? 0;
-        $cm = $datos['cm'] ?? 0;
-        $imgProducto = $datos['ImagenesProducto'] ?? null;
-        
-        if ($conImagen) {
-            $sql1 = "UPDATE productos SET 
-                    id_categoria=?, nombre_producto=?, unidad_medida=?, calibre=?, 
-                    metros=?, kg=?, color=?, ced=?, ton=?, cm=?, ImagenesProducto=?
-                    WHERE id_producto=?";
-            $stmt1 = $conn->prepare($sql1);
-            $stmt1->bind_param(
-                "isssddssddsi",
-                $datos['id_categoria'],
-                $datos['nombre_producto'],
-                $datos['unidad_medida'],
-                $datos['calibre'],
-                $metros,
-                $kg,
-                $datos['color'],
-                $datos['ced'],
-                $ton,
-                $cm,
-                $imgProducto,
-                $id
-            );
-        } else {
-            $sql1 = "UPDATE productos SET 
-                    id_categoria=?, nombre_producto=?, unidad_medida=?, calibre=?, 
-                    metros=?, kg=?, color=?, ced=?, ton=?, cm=?
-                    WHERE id_producto=?";
-            $stmt1 = $conn->prepare($sql1);
-            $stmt1->bind_param(
-                "isssddssddi",
-                $datos['id_categoria'],
-                $datos['nombre_producto'],
-                $datos['unidad_medida'],
-                $datos['calibre'],
-                $metros,
-                $kg,
-                $datos['color'],
-                $datos['ced'],
-                $ton,
-                $cm,
-                $id
-            );
-        }
-        $stmt1->execute();
-        $stmt1->close();
-
-
-        $sql2 = "INSERT INTO historial_productos
-                (id_producto_ref, id_categoria, nombre_producto, unidad_medida, calibre,
-                 metros, kg, color, ced, ton, cm, ImagenesProducto)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt2 = $conn->prepare($sql2);
-
-        $stmt2->bind_param(
-            "iissddssddds",
-            $id,
-            $datos['id_categoria'],
-            $datos['nombre_producto'],
-            $datos['unidad_medida'],
-            $datos['calibre'],
-            $metros,
-            $kg,
-            $datos['color'],
-            $datos['ced'],
-            $ton,
-            $cm,
-            $imgProducto
-        );
-
-        $stmt2->execute();
-        $stmt2->close();
-
-        mysqli_commit($conn);
-        return true;
-    } catch (Exception $e) {
-        mysqli_rollback($conn);
-        return false;
+    $conn->begin_transaction();
+    // Normalizar valores numéricos
+    $metros = $datos['metros'] ?? 0;
+    $kg = $datos['kg'] ?? 0;
+    $ton = $datos['ton'] ?? 0;
+    $cm = $datos['cm'] ?? 0;
+    if (empty($datos['ImagenesProducto'])) {
+        $productoActual = obtener_producto($conn, $id);
+        $imagen = $productoActual['ImagenesProducto'];
+    } else {
+        $imagen = $datos['ImagenesProducto'];
     }
+    $imgProducto = $conImagen ? $imagen : null;
+
+    $stmt1 = $conn->prepare("CALL sp_actualizar_producto(?,?,?,?,?,?,?,?,?,?,?,?)");
+    $stmt1->bind_param(
+        "isssddssddsi",
+        $id,
+        $datos['id_categoria'],
+        $datos['nombre_producto'],
+        $datos['unidad_medida'],
+        $datos['calibre'],
+        $metros,
+        $kg,
+        $datos['color'],
+        $datos['ced'],
+        $ton,
+        $cm,
+        $imgProducto
+    );
+    $ok = $stmt1->execute();
+    if (!$ok) {
+        throw new Exception($stmt1->error);
+    }
+    while ($conn->more_results() && $conn->next_result()) {
+        $conn->store_result();
+    }
+    $stmt1->close();
+    return true;
 }
 
 
@@ -241,3 +167,94 @@ function eliminar_producto(mysqli $conn, int $id): bool
     $stmt->close();
     return $ok;
 }
+/* 
+Para crear producto implementar stored procedure
+DELIMITER $$
+CREATE PROCEDURE sp_crear_producto(
+    IN p_id_categoria INT,
+    IN p_nombre VARCHAR(255),
+    IN p_unidad VARCHAR(100),
+    IN p_calibre VARCHAR(100),
+    IN p_metros DECIMAL(10,2),
+    IN p_kg DECIMAL(10,2),
+    IN p_color VARCHAR(100),
+    IN p_ced VARCHAR(100),
+    IN p_ton DECIMAL(10,2),
+    IN p_cm DECIMAL(10,2),
+    IN p_imagen VARCHAR(255)
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+    START TRANSACTION;
+    INSERT INTO productos
+    (id_categoria, nombre_producto, unidad_medida, calibre,
+     metros, kg, color, ced, ton, cm, ImagenesProducto)
+    VALUES
+    (p_id_categoria, p_nombre, p_unidad, p_calibre,
+     p_metros, p_kg, p_color, p_ced, p_ton, p_cm, p_imagen);
+
+    INSERT INTO historial_productos
+    (id_producto_ref, id_categoria, nombre_producto, unidad_medida, calibre,
+     metros, kg, color, ced, ton, cm, ImagenesProducto)
+    VALUES
+    (LAST_INSERT_ID(), p_id_categoria, p_nombre, p_unidad, p_calibre,
+     p_metros, p_kg, p_color, p_ced, p_ton, p_cm, p_imagen);
+
+    COMMIT;
+END $$
+DELIMITER ;
+
+Stored procedure actualizzar
+DELIMITER $$
+
+CREATE PROCEDURE sp_actualizar_producto(
+    IN p_id INT,
+    IN p_id_categoria INT,
+    IN p_nombre VARCHAR(255),
+    IN p_unidad VARCHAR(100),
+    IN p_calibre VARCHAR(100),
+    IN p_metros DECIMAL(10,2),
+    IN p_kg DECIMAL(10,2),
+    IN p_color VARCHAR(100),
+    IN p_ced VARCHAR(100),
+    IN p_ton DECIMAL(10,2),
+    IN p_cm DECIMAL(10,2),
+    IN p_imagen VARCHAR(255)
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE productos SET
+        id_categoria = p_id_categoria,
+        nombre_producto = p_nombre,
+        unidad_medida = p_unidad,
+        calibre = p_calibre,
+        metros = p_metros,
+        kg = p_kg,
+        color = p_color,
+        ced = p_ced,
+        ton = p_ton,
+        cm = p_cm,
+        ImagenesProducto = p_imagen
+    WHERE id_producto = p_id;
+
+    INSERT INTO historial_productos
+    (id_producto_ref, id_categoria, nombre_producto, unidad_medida, calibre,
+     metros, kg, color, ced, ton, cm, ImagenesProducto)
+    VALUES
+    (p_id, p_id_categoria, p_nombre, p_unidad, p_calibre,
+     p_metros, p_kg, p_color, p_ced, p_ton, p_cm, p_imagen);
+
+    COMMIT;
+END$$
+
+DELIMITER ;
+*/
