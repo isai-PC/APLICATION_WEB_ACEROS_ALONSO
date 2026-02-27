@@ -90,11 +90,15 @@ function crear_producto(mysqli $conn, array $datos): bool
     $kg = $datos['kg'] ?? 0;
     $ton = $datos['ton'] ?? 0;
     $cm = $datos['cm'] ?? 0;
-    $stmt1 = $conn->prepare("CALL sp_crear_producto(?,?,?,?,?,?,?,?,?,?,?)");
+    $precio = isset($datos['precio']) && $datos['precio'] !== ''
+        ? (float)$datos['precio']
+        : 0;
+    $stmt1 = $conn->prepare("CALL sp_crear_producto(?,?,?,?,?,?,?,?,?,?,?,?)");
     $stmt1->bind_param(
-        "isssddssdds",
+        "isdssddsddds",
         $datos['id_categoria'],
         $datos['nombre_producto'],
+        $precio,
         $datos['unidad_medida'],
         $datos['calibre'],
         $metros,
@@ -123,6 +127,9 @@ function actualizar_producto(mysqli $conn, int $id, array $datos, bool $conImage
     $kg = $datos['kg'] ?? 0;
     $ton = $datos['ton'] ?? 0;
     $cm = $datos['cm'] ?? 0;
+    $precio = isset($datos['precio']) && $datos['precio'] !== ''
+        ? (float)$datos['precio']
+        : 0;
     if (empty($datos['ImagenesProducto'])) {
         $productoActual = obtener_producto($conn, $id);
         $imagen = $productoActual['ImagenesProducto'];
@@ -131,12 +138,13 @@ function actualizar_producto(mysqli $conn, int $id, array $datos, bool $conImage
     }
     $imgProducto = $conImagen ? $imagen : null;
 
-    $stmt1 = $conn->prepare("CALL sp_actualizar_producto(?,?,?,?,?,?,?,?,?,?,?,?)");
+    $stmt1 = $conn->prepare("CALL sp_actualizar_producto(?,?,?,?,?,?,?,?,?,?,?,?,?)");
     $stmt1->bind_param(
-        "isssddssddsi",
+        "iisddssddsddds",
         $id,
         $datos['id_categoria'],
         $datos['nombre_producto'],
+        $precio,
         $datos['unidad_medida'],
         $datos['calibre'],
         $metros,

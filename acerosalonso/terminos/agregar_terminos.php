@@ -51,17 +51,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
 
         if ($idPost === "") {
-            // INSERT
-            $sql = "INSERT INTO terminos_condiciones (titulo, contenido) VALUES (?, ?)";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("ss", $tituloPost, $contPost);
-            $stmt->execute();
-            $stmt->close();
+    // INSERT usando el PROCEDIMIENTO almacenado
 
+    $stmt = $conn->prepare("CALL CrearNuevoTermino(?, ?)");
+
+    if (!$stmt) {
+        $mensaje = "Error al preparar el procedimiento: " . $conn->error;
+        $tipo_mensaje = "error";
+    } else {
+
+        $stmt->bind_param("ss", $tituloPost, $contPost);
+
+        if ($stmt->execute()) {
+            $stmt->close();
             header("Location: admin_terminos.php?msg=creado");
             exit();
-
         } else {
+            $mensaje = "Error al ejecutar el procedimiento: " . $stmt->error;
+            $tipo_mensaje = "error";
+            $stmt->close();
+        }
+    }
+} else {
             // UPDATE
             $sql = "UPDATE terminos_condiciones SET titulo = ?, contenido = ? WHERE id = ?";
             $stmt = $conn->prepare($sql);

@@ -3,10 +3,14 @@ require_once __DIR__ . '/../../conexion.php';
 require_once __DIR__ . '/funcionesdetalle.php';
 
 // Helpers
-function h($v) { return htmlspecialchars((string)($v ?? ''), ENT_QUOTES, 'UTF-8'); }
-function param_get_int(string $key): int {
-$v = filter_input(INPUT_GET, $key, FILTER_VALIDATE_INT);
-return is_int($v) ? $v : 0;
+function h($v)
+{
+    return htmlspecialchars((string)($v ?? ''), ENT_QUOTES, 'UTF-8');
+}
+function param_get_int(string $key): int
+{
+    $v = filter_input(INPUT_GET, $key, FILTER_VALIDATE_INT);
+    return is_int($v) ? $v : 0;
 }
 
 // Cargar datos
@@ -41,17 +45,18 @@ $IMG_DIR_PUBLIC = '../../imagenes/'; // carpeta pública de imágenes
         </section>
         <nav>
             <ul>
-                <li><a href="../../paginaPrincipal.php">Inicio</a></li><li><a href="../../Consultas/consultas.php">Consultas</a></li>
-            </nav>
+                <li><a href="../../paginaPrincipal.php">Inicio</a></li>
+                <li><a href="../../Consultas/consultas.php">Consultas</a></li>
+        </nav>
     </header>
     <main class="admin-detalle">
         <h1>Administrar Productos del Catálogo</h1>
 
         <?php if ($ok !== ''): ?>
-        <div class="notice">Guardado correctamente.</div>
+            <div class="notice">Guardado correctamente.</div>
         <?php endif; ?>
         <?php if ($err !== ''): ?>
-        <div class="notice notice--err">Hubo un error al guardar. (Faltan datos obligatorios)</div>
+            <div class="notice notice--err">Hubo un error al guardar. (Faltan datos obligatorios)</div>
         <?php endif; ?>
 
         <form action="guardardetalle.php" method="post" enctype="multipart/form-data">
@@ -68,11 +73,11 @@ $IMG_DIR_PUBLIC = '../../imagenes/'; // carpeta pública de imágenes
                     <label for="id_categoria">Categoría *</label>
                     <select id="id_categoria" name="id_categoria" required>
                         <option value="">-- Seleccione --</option>
-                        <?php foreach ($categorias_lista as $cat): 
-                $sel = ($is_edit && (int)$prod['id_categoria'] === (int)$cat['id_categoria']) ? 'selected' : ''; ?>
-                        <option value="<?php echo (int)$cat['id_categoria']; ?>" <?php echo $sel; ?>>
-                            <?php echo h($cat['nombre_categoria']); ?>
-                        </option>
+                        <?php foreach ($categorias_lista as $cat):
+                            $sel = ($is_edit && (int)$prod['id_categoria'] === (int)$cat['id_categoria']) ? 'selected' : ''; ?>
+                            <option value="<?php echo (int)$cat['id_categoria']; ?>" <?php echo $sel; ?>>
+                                <?php echo h($cat['nombre_categoria']); ?>
+                            </option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -82,10 +87,10 @@ $IMG_DIR_PUBLIC = '../../imagenes/'; // carpeta pública de imágenes
             <input id="ImagenesProducto" name="ImagenesProducto" type="file" accept=".jpg,.jpeg,.png,.webp">
             <input type="hidden" name="imagen_actual" value="<?php echo h($prod['ImagenesProducto'] ?? ''); ?>">
             <?php if (!empty($prod['ImagenesProducto'])): ?>
-            <p>Actual:
-                <img class="thumb" src="<?php echo $IMG_DIR_PUBLIC . h($prod['ImagenesProducto']); ?>"
-                    alt="Imagen actual">
-            </p>
+                <p>Actual:
+                    <img class="thumb" src="<?php echo $IMG_DIR_PUBLIC . h($prod['ImagenesProducto']); ?>"
+                        alt="Imagen actual">
+                </p>
             <?php endif; ?>
 
             <h2>Especificaciones Técnicas (Vista Detalle)</h2>
@@ -133,27 +138,33 @@ $IMG_DIR_PUBLIC = '../../imagenes/'; // carpeta pública de imágenes
                 <div>
                     <label for="cm">Cm (ej: 30.00)</label>
                     <input id="cm" name="cm" type="number" step="0.01" value="<?php echo h($prod['cm'] ?? ''); ?>">
+                    <label>
+                        Precio (ej: 100.00)
+                        <input type="number" step="0.01" min="0" name="precio" value="<?php echo h($producto['precio']); ?>">
+                    </label>
                 </div>
             </div>
 
             <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap">
                 <?php if ($is_edit): ?>
-                <button class="btn btn-primary" type="submit" name="accion" value="actualizar">Actualizar</button>
-                <button class="btn btn-danger" type="submit" name="accion" value="eliminar"
-                    onclick="return confirm('¿Eliminar este producto?');">Eliminar</button>
-                <a class="btn btn-neutral" href="editardetalle.php">Nuevo Producto</a>
+                    <button class="btn btn-primary" type="submit" name="accion" value="actualizar">Actualizar</button>
+                    <button class="btn btn-danger" type="submit" name="accion" value="eliminar"
+                        onclick="return confirm('¿Eliminar este producto?');">Eliminar</button>
+                    <a class="btn btn-neutral" href="editardetalle.php">Nuevo Producto</a>
                 <?php else: ?>
-                <button class="btn btn-primary" type="submit" name="accion" value="crear">Guardar Producto</button>
+                    <button class="btn btn-primary" type="submit" name="accion" value="crear">Guardar Producto</button>
                 <?php endif; ?>
             </div>
         </form>
-        
-    </main> <footer>
-    <div class="footer-sections">
-    
-    <p class="copy">Todos los derechos reservados © 2025 Aceros Alonso</p>
-    </div>
-</footer>
+
+    </main>
+    <footer>
+        <div class="footer-sections">
+
+            <p class="copy">Todos los derechos reservados © 2025 Aceros Alonso</p>
+        </div>
+    </footer>
 
 </body>
+
 </html>

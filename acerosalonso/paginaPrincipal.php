@@ -271,7 +271,7 @@ if (isset($_SESSION['id_empleado'])) {
                 <ul class="barra-links">
                     <li><a href="contacto/contacto.php">Contacto</a></li>
                     <li><a href="Preguntasfrecuentes/preguntas.php">Preguntas frecuentes</a></li>
-                    <li><a href="terminos/terminos.php">Términos y condiciones</a></li>
+                    <li><a href="terminos/NewTerminos.php">Términos y condiciones</a></li>
                 </ul>
             </div>
 

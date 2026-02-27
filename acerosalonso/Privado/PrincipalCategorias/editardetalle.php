@@ -37,6 +37,7 @@ $producto = [
     'ced' => '',
     'ton' => '',
     'cm' => '',
+    'precio' => '',
     'ImagenesProducto' => ''
 ];
 
@@ -244,6 +245,11 @@ $IMG_DIR_PUBLIC = '../../imagenes/';
                     <label>
                         Cm (ej: 38.00)
                         <input type="number" step="0.01" min="0" name="cm" value="<?php echo h($producto['cm']); ?>">
+                    </label>
+
+                    <label>
+                        Precio (ej: 100.00)
+                        <input type="number" step="0.01" min="0" name="precio" value="<?php echo h($producto['precio']); ?>">
                     </label>
                 </div>
 

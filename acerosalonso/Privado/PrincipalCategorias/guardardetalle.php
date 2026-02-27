@@ -31,6 +31,7 @@ $accion = $_POST['accion'] ?? '';
 $datos = [
     'id_categoria' => (int)($_POST['id_categoria'] ?? 0),
     'nombre_producto' => trim($_POST['nombre_producto'] ?? ''),
+    'precio' => empty($_POST['precio']) ? null : (float)$_POST['precio'],
     'unidad_medida' => empty($_POST['unidad_medida']) ? null : trim($_POST['unidad_medida']),
     'calibre' => empty($_POST['calibre']) ? null : trim($_POST['calibre']),
     'metros' => empty($_POST['metros']) ? null : (float)$_POST['metros'],
@@ -39,7 +40,7 @@ $datos = [
     'ced' => empty($_POST['ced']) ? null : trim($_POST['ced']),
     'ton' => empty($_POST['ton']) ? null : (float)$_POST['ton'],
     'cm' => empty($_POST['cm']) ? null : (float)$_POST['cm'],
-    'ImagenesProducto' => null 
+    'ImagenesProducto' => '' // string vacío en lugar de null
 ];
 
 // --- INTERCEPTOR DE SEGURIDAD ---
@@ -62,7 +63,7 @@ if ($accion === 'crear') {
     }
     
     $img = subir_imagen_producto($_FILES['ImagenesProducto'] ?? []);
-    $datos['ImagenesProducto'] = $img;
+    $datos['ImagenesProducto'] = $img ?? ''; // string vacío si no hay imagen
     
     $ok = crear_producto($conn, $datos);
     volver_listado($ok ? 'guardado' : 'error');
